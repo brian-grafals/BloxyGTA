@@ -1,0 +1,57 @@
+[gd_scene load_steps=6 format=3]
+
+[sub_resource type="BoxMesh" id="mesh_trunk"]
+size = Vector3(0.5, 2.0, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="mat_trunk"]
+albedo_color = Color(0.38, 0.22, 0.08, 1)
+
+[sub_resource type="BoxMesh" id="mesh_leaves_low"]
+size = Vector3(2.4, 1.2, 2.4)
+
+[sub_resource type="BoxMesh" id="mesh_leaves_mid"]
+size = Vector3(1.8, 1.2, 1.8)
+
+[sub_resource type="BoxMesh" id="mesh_leaves_top"]
+size = Vector3(1.0, 1.0, 1.0)
+
+[sub_resource type="StandardMaterial3D" id="mat_leaves"]
+albedo_color = Color(0.18, 0.6, 0.1, 1)
+
+[sub_resource type="BoxShape3D" id="col_trunk"]
+size = Vector3(0.5, 2.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="col_leaves"]
+size = Vector3(2.4, 3.4, 2.4)
+
+[node name="Tree" type="StaticBody3D"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="ColTrunk" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+shape = SubResource("col_trunk")
+
+[node name="ColLeaves" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.7, 0)
+shape = SubResource("col_leaves")
+
+[node name="Trunk" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+mesh = SubResource("mesh_trunk")
+surface_material_override/0 = SubResource("mat_trunk")
+
+[node name="LeavesLow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+mesh = SubResource("mesh_leaves_low")
+surface_material_override/0 = SubResource("mat_leaves")
+
+[node name="LeavesMid" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+mesh = SubResource("mesh_leaves_mid")
+surface_material_override/0 = SubResource("mat_leaves")
+
+[node name="LeavesTop" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.6, 0)
+mesh = SubResource("mesh_leaves_top")
+surface_material_override/0 = SubResource("mat_leaves")

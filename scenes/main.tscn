@@ -3,6 +3,21 @@
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/dummy.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/car.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/props/grass_tile.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/props/sidewalk.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://scenes/props/road_straight.tscn" id="6"]
+[ext_resource type="PackedScene" path="res://scenes/props/road_highway.tscn" id="7"]
+[ext_resource type="PackedScene" path="res://scenes/props/road_intersection.tscn" id="8"]
+[ext_resource type="PackedScene" path="res://scenes/props/bench.tscn" id="9"]
+[ext_resource type="PackedScene" path="res://scenes/props/tree.tscn" id="10"]
+[ext_resource type="PackedScene" path="res://scenes/props/streetlight.tscn" id="11"]
+[ext_resource type="PackedScene" path="res://scenes/props/stoplight.tscn" id="12"]
+[ext_resource type="PackedScene" path="res://scenes/props/skyscraper.tscn" id="13"]
+[ext_resource type="PackedScene" path="res://scenes/props/skyscraper_short.tscn" id="14"]
+[ext_resource type="PackedScene" path="res://scenes/props/clothes_shop.tscn" id="15"]
+[ext_resource type="PackedScene" path="res://scenes/props/gun_shop.tscn" id="16"]
+[ext_resource type="PackedScene" path="res://scenes/props/police_station.tscn" id="17"]
+[ext_resource type="PackedScene" path="res://scenes/props/hotel.tscn" id="18"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 
@@ -55,3 +70,60 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -8)
 
 [node name="Car" parent="." instance=ExtResource("3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.5, -3)
+
+[node name="GrassTile1" parent="." instance=ExtResource("4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -58, 0, -30)
+
+[node name="GrassTile2" parent="." instance=ExtResource("4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 0, -30)
+
+[node name="Sidewalk1" parent="." instance=ExtResource("5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -43, 0, -30)
+
+[node name="Streetlight1" parent="." instance=ExtResource("11")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -41, 0, -31)
+
+[node name="Stoplight1" parent="." instance=ExtResource("12")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39, 0, -31)
+
+[node name="RoadStraight1" parent="." instance=ExtResource("6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, 0, -30)
+
+[node name="RoadHighway1" parent="." instance=ExtResource("7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, -30)
+
+[node name="RoadIntersection1" parent="." instance=ExtResource("8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -30)
+
+[node name="Sidewalk2" parent="." instance=ExtResource("5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -30)
+
+[node name="Bench1" parent="." instance=ExtResource("9")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -30)
+
+[node name="Tree1" parent="." instance=ExtResource("10")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -30)
+
+[node name="Tree2" parent="." instance=ExtResource("10")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, -30)
+
+[node name="Tree3" parent="." instance=ExtResource("10")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0, -30)
+
+[node name="Skyscraper1" parent="." instance=ExtResource("13")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0, -33)
+
+[node name="SkyscraperShort1" parent="." instance=ExtResource("14")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 0, -32)
+
+[node name="ClothesShop1" parent="." instance=ExtResource("15")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 0, -30)
+
+[node name="GunShop1" parent="." instance=ExtResource("16")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45, 0, -30)
+
+[node name="PoliceStation1" parent="." instance=ExtResource("17")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 0, -30)
+
+[node name="Hotel1" parent="." instance=ExtResource("18")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 67, 0, -33)

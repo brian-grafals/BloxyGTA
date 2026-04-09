@@ -1,0 +1,77 @@
+[gd_scene load_steps=7 format=3]
+
+[sub_resource type="BoxMesh" id="mesh_pole"]
+size = Vector3(0.2, 4.0, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="mat_pole"]
+albedo_color = Color(0.4, 0.4, 0.45, 1)
+
+[sub_resource type="BoxMesh" id="mesh_box"]
+size = Vector3(0.55, 1.5, 0.45)
+
+[sub_resource type="StandardMaterial3D" id="mat_box"]
+albedo_color = Color(0.15, 0.15, 0.15, 1)
+
+[sub_resource type="BoxMesh" id="mesh_light"]
+size = Vector3(0.35, 0.35, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="mat_red"]
+albedo_color = Color(1.0, 0.08, 0.08, 1)
+emission_enabled = true
+emission = Color(1.0, 0.08, 0.08, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="StandardMaterial3D" id="mat_yellow"]
+albedo_color = Color(1.0, 0.85, 0.0, 1)
+emission_enabled = true
+emission = Color(1.0, 0.85, 0.0, 1)
+emission_energy_multiplier = 0.3
+
+[sub_resource type="StandardMaterial3D" id="mat_green"]
+albedo_color = Color(0.0, 0.8, 0.2, 1)
+emission_enabled = true
+emission = Color(0.0, 0.8, 0.2, 1)
+emission_energy_multiplier = 0.3
+
+[sub_resource type="BoxShape3D" id="col_pole"]
+size = Vector3(0.2, 4.0, 0.2)
+
+[sub_resource type="BoxShape3D" id="col_box"]
+size = Vector3(0.55, 1.5, 0.45)
+
+[node name="Stoplight" type="StaticBody3D"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="ColPole" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, 0)
+shape = SubResource("col_pole")
+
+[node name="ColBox" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.75, 0.1)
+shape = SubResource("col_box")
+
+[node name="Pole" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, 0)
+mesh = SubResource("mesh_pole")
+surface_material_override/0 = SubResource("mat_pole")
+
+[node name="Box" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.75, 0.1)
+mesh = SubResource("mesh_box")
+surface_material_override/0 = SubResource("mat_box")
+
+[node name="LightRed" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.25, 0.29)
+mesh = SubResource("mesh_light")
+surface_material_override/0 = SubResource("mat_red")
+
+[node name="LightYellow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.75, 0.29)
+mesh = SubResource("mesh_light")
+surface_material_override/0 = SubResource("mat_yellow")
+
+[node name="LightGreen" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.25, 0.29)
+mesh = SubResource("mesh_light")
+surface_material_override/0 = SubResource("mat_green")

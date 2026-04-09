@@ -1,0 +1,79 @@
+[gd_scene load_steps=8 format=3]
+
+[sub_resource type="BoxShape3D" id="col_body"]
+size = Vector3(6, 4, 5)
+
+[sub_resource type="BoxMesh" id="mesh_body"]
+size = Vector3(6, 4, 5)
+
+[sub_resource type="StandardMaterial3D" id="mat_body"]
+albedo_color = Color(0.2, 0.32, 0.18, 1)
+
+[sub_resource type="BoxMesh" id="mesh_sign_board"]
+size = Vector3(4.5, 1.0, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="mat_sign"]
+albedo_color = Color(0.12, 0.12, 0.12, 1)
+
+[sub_resource type="BoxMesh" id="mesh_door"]
+size = Vector3(1.0, 2.2, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="mat_door"]
+albedo_color = Color(0.35, 0.22, 0.1, 1)
+
+[sub_resource type="BoxMesh" id="mesh_window"]
+size = Vector3(1.2, 1.4, 0.08)
+
+[sub_resource type="StandardMaterial3D" id="mat_glass"]
+albedo_color = Color(0.65, 0.85, 0.95, 0.7)
+
+[sub_resource type="BoxMesh" id="mesh_stripe"]
+size = Vector3(6.1, 0.2, 0.08)
+
+[sub_resource type="StandardMaterial3D" id="mat_stripe"]
+albedo_color = Color(0.8, 0.1, 0.1, 1)
+
+[node name="GunShop" type="StaticBody3D"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+shape = SubResource("col_body")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+mesh = SubResource("mesh_body")
+surface_material_override/0 = SubResource("mat_body")
+
+[node name="SignBoard" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 2.57)
+mesh = SubResource("mesh_sign_board")
+surface_material_override/0 = SubResource("mat_sign")
+
+[node name="Stripe" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 2.57)
+mesh = SubResource("mesh_stripe")
+surface_material_override/0 = SubResource("mat_stripe")
+
+[node name="Door" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 2.55)
+mesh = SubResource("mesh_door")
+surface_material_override/0 = SubResource("mat_door")
+
+[node name="WindowLeft" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1, 1.4, 2.55)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="WindowRight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1, 1.4, 2.55)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="Sign" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 2.65)
+text = "GUN SHOP"
+font_size = 36
+modulate = Color(0.1, 1.0, 0.2, 1)
+billboard = 0

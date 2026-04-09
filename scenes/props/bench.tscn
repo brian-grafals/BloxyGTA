@@ -1,0 +1,59 @@
+[gd_scene load_steps=4 format=3]
+
+[sub_resource type="BoxMesh" id="mesh_seat"]
+size = Vector3(2.0, 0.15, 0.6)
+
+[sub_resource type="BoxMesh" id="mesh_plank"]
+size = Vector3(2.0, 0.12, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="mat_wood"]
+albedo_color = Color(0.55, 0.35, 0.15, 1)
+
+[sub_resource type="BoxMesh" id="mesh_leg"]
+size = Vector3(0.12, 0.6, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="mat_metal"]
+albedo_color = Color(0.4, 0.4, 0.45, 1)
+
+[sub_resource type="BoxShape3D" id="col_seat"]
+size = Vector3(2.0, 0.15, 0.6)
+
+[sub_resource type="BoxShape3D" id="col_back"]
+size = Vector3(2.0, 0.5, 0.12)
+
+[node name="Bench" type="StaticBody3D"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="ColSeat" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.525, 0)
+shape = SubResource("col_seat")
+
+[node name="ColBack" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, -0.3)
+shape = SubResource("col_back")
+
+[node name="Seat" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.525, 0)
+mesh = SubResource("mesh_seat")
+surface_material_override/0 = SubResource("mat_wood")
+
+[node name="Backrest1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.82, -0.3)
+mesh = SubResource("mesh_plank")
+surface_material_override/0 = SubResource("mat_wood")
+
+[node name="Backrest2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.98, -0.3)
+mesh = SubResource("mesh_plank")
+surface_material_override/0 = SubResource("mat_wood")
+
+[node name="LegFL" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.85, 0.3, 0.1)
+mesh = SubResource("mesh_leg")
+surface_material_override/0 = SubResource("mat_metal")
+
+[node name="LegFR" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, 0.3, 0.1)
+mesh = SubResource("mesh_leg")
+surface_material_override/0 = SubResource("mat_metal")

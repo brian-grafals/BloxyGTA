@@ -1,0 +1,150 @@
+[gd_scene load_steps=8 format=3]
+
+[sub_resource type="BoxShape3D" id="col_body"]
+size = Vector3(8, 14, 7)
+
+[sub_resource type="BoxMesh" id="mesh_body"]
+size = Vector3(8, 14, 7)
+
+[sub_resource type="StandardMaterial3D" id="mat_body"]
+albedo_color = Color(0.82, 0.75, 0.6, 1)
+
+[sub_resource type="BoxMesh" id="mesh_signband"]
+size = Vector3(8.1, 1.2, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="mat_signband"]
+albedo_color = Color(0.85, 0.42, 0.1, 1)
+
+[sub_resource type="BoxMesh" id="mesh_window"]
+size = Vector3(1.0, 0.9, 0.08)
+
+[sub_resource type="StandardMaterial3D" id="mat_glass"]
+albedo_color = Color(0.6, 0.82, 1.0, 0.75)
+
+[sub_resource type="BoxMesh" id="mesh_door"]
+size = Vector3(1.5, 2.4, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="mat_door"]
+albedo_color = Color(0.5, 0.35, 0.15, 1)
+
+[sub_resource type="BoxMesh" id="mesh_canopy"]
+size = Vector3(3.0, 0.2, 2.0)
+
+[sub_resource type="StandardMaterial3D" id="mat_canopy"]
+albedo_color = Color(0.85, 0.42, 0.1, 1)
+
+[sub_resource type="BoxMesh" id="mesh_roof"]
+size = Vector3(8.3, 0.5, 7.3)
+
+[sub_resource type="StandardMaterial3D" id="mat_roof"]
+albedo_color = Color(0.55, 0.48, 0.38, 1)
+
+[node name="Hotel" type="StaticBody3D"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, 0)
+shape = SubResource("col_body")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, 0)
+mesh = SubResource("mesh_body")
+surface_material_override/0 = SubResource("mat_body")
+
+[node name="Roof" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14.25, 0)
+mesh = SubResource("mesh_roof")
+surface_material_override/0 = SubResource("mat_roof")
+
+[node name="SignBand" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.5, 3.57)
+mesh = SubResource("mesh_signband")
+surface_material_override/0 = SubResource("mat_signband")
+
+[node name="Door" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 3.57)
+mesh = SubResource("mesh_door")
+surface_material_override/0 = SubResource("mat_door")
+
+[node name="Canopy" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.0, 4.2)
+mesh = SubResource("mesh_canopy")
+surface_material_override/0 = SubResource("mat_canopy")
+
+[node name="WinF1L" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 2.5, 3.57)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="WinF1R" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 2.5, 3.57)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="WinF2L" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 4.5, 3.57)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="WinF2M" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 3.57)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="WinF2R" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 4.5, 3.57)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="WinF3L" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 6.5, 3.57)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="WinF3M" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 3.57)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="WinF3R" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 6.5, 3.57)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="WinF4L" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 8.5, 3.57)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="WinF4M" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.5, 3.57)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="WinF4R" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 8.5, 3.57)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="WinF5L" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 10.5, 3.57)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="WinF5M" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10.5, 3.57)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="WinF5R" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 10.5, 3.57)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="Sign" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.5, 3.65)
+text = "HOTEL"
+font_size = 56
+modulate = Color(1.0, 0.95, 0.8, 1)
+billboard = 0

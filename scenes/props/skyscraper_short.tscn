@@ -1,0 +1,103 @@
+[gd_scene load_steps=6 format=3]
+
+[sub_resource type="BoxShape3D" id="col"]
+size = Vector3(5, 10, 5)
+
+[sub_resource type="BoxMesh" id="mesh_body"]
+size = Vector3(5, 10, 5)
+
+[sub_resource type="StandardMaterial3D" id="mat_body"]
+albedo_color = Color(0.22, 0.22, 0.35, 1)
+
+[sub_resource type="BoxMesh" id="mesh_window"]
+size = Vector3(0.65, 0.5, 0.08)
+
+[sub_resource type="StandardMaterial3D" id="mat_window"]
+albedo_color = Color(0.7, 0.9, 1.0, 1)
+emission_enabled = true
+emission = Color(0.6, 0.85, 1.0, 1)
+emission_energy_multiplier = 0.5
+
+[sub_resource type="BoxMesh" id="mesh_roof"]
+size = Vector3(5.3, 0.5, 5.3)
+
+[sub_resource type="StandardMaterial3D" id="mat_roof"]
+albedo_color = Color(0.45, 0.45, 0.5, 1)
+
+[node name="SkyscraperShort" type="StaticBody3D"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+shape = SubResource("col")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+mesh = SubResource("mesh_body")
+surface_material_override/0 = SubResource("mat_body")
+
+[node name="Roof" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10.25, 0)
+mesh = SubResource("mesh_roof")
+surface_material_override/0 = SubResource("mat_roof")
+
+[node name="WinF1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 2.0, 2.55)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_window")
+
+[node name="WinF2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, 2.55)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_window")
+
+[node name="WinF3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 2.0, 2.55)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_window")
+
+[node name="WinF4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 4.0, 2.55)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_window")
+
+[node name="WinF5" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.0, 2.55)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_window")
+
+[node name="WinF6" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 4.0, 2.55)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_window")
+
+[node name="WinF7" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 6.0, 2.55)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_window")
+
+[node name="WinF8" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.0, 2.55)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_window")
+
+[node name="WinF9" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 6.0, 2.55)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_window")
+
+[node name="WinF10" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 8.0, 2.55)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_window")
+
+[node name="WinF11" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.0, 2.55)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_window")
+
+[node name="WinF12" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 8.0, 2.55)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_window")

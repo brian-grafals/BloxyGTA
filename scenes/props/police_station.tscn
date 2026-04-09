@@ -1,0 +1,109 @@
+[gd_scene load_steps=8 format=3]
+
+[sub_resource type="BoxShape3D" id="col_body"]
+size = Vector3(9, 6, 8)
+
+[sub_resource type="BoxMesh" id="mesh_body"]
+size = Vector3(9, 6, 8)
+
+[sub_resource type="StandardMaterial3D" id="mat_body"]
+albedo_color = Color(0.15, 0.2, 0.38, 1)
+
+[sub_resource type="BoxMesh" id="mesh_stripe"]
+size = Vector3(9.1, 0.5, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="mat_stripe"]
+albedo_color = Color(0.9, 0.9, 0.95, 1)
+
+[sub_resource type="BoxMesh" id="mesh_door"]
+size = Vector3(1.4, 2.5, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="mat_door"]
+albedo_color = Color(0.15, 0.15, 0.2, 1)
+
+[sub_resource type="BoxMesh" id="mesh_window"]
+size = Vector3(1.2, 1.3, 0.08)
+
+[sub_resource type="StandardMaterial3D" id="mat_glass"]
+albedo_color = Color(0.6, 0.75, 0.95, 0.8)
+
+[sub_resource type="BoxMesh" id="mesh_roof_edge"]
+size = Vector3(9.4, 0.4, 8.4)
+
+[sub_resource type="StandardMaterial3D" id="mat_roof"]
+albedo_color = Color(0.12, 0.18, 0.35, 1)
+
+[sub_resource type="BoxMesh" id="mesh_light_bar"]
+size = Vector3(1.5, 0.2, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="mat_light_red"]
+albedo_color = Color(1.0, 0.05, 0.05, 1)
+emission_enabled = true
+emission = Color(1.0, 0.05, 0.05, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="StandardMaterial3D" id="mat_light_blue"]
+albedo_color = Color(0.05, 0.3, 1.0, 1)
+emission_enabled = true
+emission = Color(0.05, 0.3, 1.0, 1)
+emission_energy_multiplier = 2.0
+
+[node name="PoliceStation" type="StaticBody3D"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+shape = SubResource("col_body")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+mesh = SubResource("mesh_body")
+surface_material_override/0 = SubResource("mat_body")
+
+[node name="RoofEdge" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.2, 0)
+mesh = SubResource("mesh_roof_edge")
+surface_material_override/0 = SubResource("mat_roof")
+
+[node name="StripeTop" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 4.07)
+mesh = SubResource("mesh_stripe")
+surface_material_override/0 = SubResource("mat_stripe")
+
+[node name="StripeBottom" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 4.07)
+mesh = SubResource("mesh_stripe")
+surface_material_override/0 = SubResource("mat_stripe")
+
+[node name="Door" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 4.07)
+mesh = SubResource("mesh_door")
+surface_material_override/0 = SubResource("mat_door")
+
+[node name="WindowLeft" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0, 2.5, 4.07)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="WindowRight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0, 2.5, 4.07)
+mesh = SubResource("mesh_window")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="LightBarRed" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 6.5, 0)
+mesh = SubResource("mesh_light_bar")
+surface_material_override/0 = SubResource("mat_light_red")
+
+[node name="LightBarBlue" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 6.5, 0)
+mesh = SubResource("mesh_light_bar")
+surface_material_override/0 = SubResource("mat_light_blue")
+
+[node name="Sign" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 4.08)
+text = "POLICE"
+font_size = 52
+modulate = Color(0.9, 0.9, 1.0, 1)
+billboard = 0
