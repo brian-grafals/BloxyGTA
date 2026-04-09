@@ -1,0 +1,9 @@
+# Godot auto-generated files
+.godot/
+*.import
+
+# Mac junk
+.DS_Store
+
+# Export builds
+export/
