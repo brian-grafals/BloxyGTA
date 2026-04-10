@@ -68,62 +68,83 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 [node name="Dummy" parent="." unique_id=1523863791 instance=ExtResource("2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -8)
 
-[node name="Car" parent="." instance=ExtResource("3")]
+[node name="Car" parent="." unique_id=711713523 instance=ExtResource("3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.5, -3)
 
-[node name="GrassTile1" parent="." instance=ExtResource("4")]
+[node name="GrassTile1" parent="." unique_id=1914143861 instance=ExtResource("4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -58, 0, -30)
 
-[node name="GrassTile2" parent="." instance=ExtResource("4")]
+[node name="GrassTile2" parent="." unique_id=1938694124 instance=ExtResource("4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 0, -30)
 
-[node name="Sidewalk1" parent="." instance=ExtResource("5")]
+[node name="Sidewalk1" parent="." unique_id=1375663745 instance=ExtResource("5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -43, 0, -30)
 
-[node name="Streetlight1" parent="." instance=ExtResource("11")]
+[node name="Streetlight1" parent="." unique_id=1720911745 instance=ExtResource("11")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -41, 0, -31)
 
-[node name="Stoplight1" parent="." instance=ExtResource("12")]
+[node name="Stoplight1" parent="." unique_id=2128300593 instance=ExtResource("12")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39, 0, -31)
 
-[node name="RoadStraight1" parent="." instance=ExtResource("6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, 0, -30)
+[node name="RoadStraight1" parent="." unique_id=55451554 instance=ExtResource("6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.644665, 0, 3.8432693)
 
-[node name="RoadHighway1" parent="." instance=ExtResource("7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, -30)
+[node name="RoadStraight6" parent="." unique_id=1472218693 instance=ExtResource("6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.644665, 0, 27.645702)
 
-[node name="RoadIntersection1" parent="." instance=ExtResource("8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -30)
+[node name="RoadStraight2" parent="." unique_id=227893928 instance=ExtResource("6")]
+transform = Transform3D(-4.37114e-08, 0, -9.424192, 0, 1, 0, 1.0000002, 0, -4.1194454e-07, -14.644665, 0, 63.42318)
 
-[node name="Sidewalk2" parent="." instance=ExtResource("5")]
+[node name="RoadStraight4" parent="." unique_id=1181413213 instance=ExtResource("6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.644665, 3.6605377, 45.61353)
+
+[node name="RoadStraight3" parent="." unique_id=631759707 instance=ExtResource("6")]
+transform = Transform3D(1, 0, 0, 0, 0.90744776, 0.4201649, 0, -0.4201649, 0.90744776, -14.644665, 1.5700326, 36.24238)
+
+[node name="RoadStraight5" parent="." unique_id=1880400582 instance=ExtResource("6")]
+transform = Transform3D(1, 0, 0, 0, 0.9234582, -0.38369906, 0, 0.38369906, 0.9234582, -14.644665, 1.7796545, 54.96062)
+
+[node name="RoadHighway3" parent="." unique_id=894154794 instance=ExtResource("7")]
+transform = Transform3D(-4.371138e-08, 0, 7.98, 0, 1, 0, -0.9999998, 0, -3.4881688e-07, -38.50859, 0, 15.792767)
+
+[node name="RoadHighway5" parent="." unique_id=131161798 instance=ExtResource("7")]
+transform = Transform3D(-4.371138e-08, 0, 7.98, 0, 1, 0, -0.9999998, 0, -3.4881688e-07, -36.018055, 0, 46.60738)
+
+[node name="RoadHighway4" parent="." unique_id=92962266 instance=ExtResource("7")]
+transform = Transform3D(-4.371138e-08, 0, 7.98, 0, 1, 0, -0.9999998, 0, -3.4881688e-07, 41.37323, 0, 15.792767)
+
+[node name="RoadIntersection1" parent="." unique_id=1060714432 instance=ExtResource("8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -29.67598)
+
+[node name="Sidewalk2" parent="." unique_id=272378816 instance=ExtResource("5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -30)
 
-[node name="Bench1" parent="." instance=ExtResource("9")]
+[node name="Bench1" parent="." unique_id=822704049 instance=ExtResource("9")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -30)
 
-[node name="Tree1" parent="." instance=ExtResource("10")]
+[node name="Tree1" parent="." unique_id=676485149 instance=ExtResource("10")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -30)
 
-[node name="Tree2" parent="." instance=ExtResource("10")]
+[node name="Tree2" parent="." unique_id=1236775946 instance=ExtResource("10")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, -30)
 
-[node name="Tree3" parent="." instance=ExtResource("10")]
+[node name="Tree3" parent="." unique_id=291394759 instance=ExtResource("10")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0, -30)
 
-[node name="Skyscraper1" parent="." instance=ExtResource("13")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0, -33)
+[node name="Skyscraper1" parent="." unique_id=1644296519 instance=ExtResource("13")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0, -32.09269)
 
-[node name="SkyscraperShort1" parent="." instance=ExtResource("14")]
+[node name="SkyscraperShort1" parent="." unique_id=137793300 instance=ExtResource("14")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 0, -32)
 
-[node name="ClothesShop1" parent="." instance=ExtResource("15")]
+[node name="ClothesShop1" parent="." unique_id=2012427861 instance=ExtResource("15")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 0, -30)
 
-[node name="GunShop1" parent="." instance=ExtResource("16")]
+[node name="GunShop1" parent="." unique_id=241774672 instance=ExtResource("16")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45, 0, -30)
 
-[node name="PoliceStation1" parent="." instance=ExtResource("17")]
+[node name="PoliceStation1" parent="." unique_id=1213024647 instance=ExtResource("17")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 0, -30)
 
-[node name="Hotel1" parent="." instance=ExtResource("18")]
+[node name="Hotel1" parent="." unique_id=225762497 instance=ExtResource("18")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 67, 0, -33)

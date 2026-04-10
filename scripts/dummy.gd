@@ -76,7 +76,7 @@ func _flash_red() -> void:
 func _spawn_debris(origin: Vector3, count: int, explode: bool) -> void:
 	for i in count:
 		var piece := RigidBody3D.new()
-		piece.collision_layer = 4
+		piece.collision_layer = 0
 		piece.collision_mask = 1
 
 		var mesh_inst := MeshInstance3D.new()

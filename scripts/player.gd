@@ -21,11 +21,8 @@ func _ready() -> void:
 	camera_pivot.rotation.x = _pitch
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		if _in_car:
-			camera_pivot.rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
-		else:
-			rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
+	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and not _in_car:
+		rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
 		_pitch = clamp(_pitch - event.relative.y * MOUSE_SENSITIVITY, -1.2, 0.4)
 		camera_pivot.rotation.x = _pitch
 
@@ -89,13 +86,20 @@ func _enter_car(car: Node3D) -> void:
 	_current_car = car
 	visible = false
 	velocity = Vector3.ZERO
+	camera_pivot.position.y = 2.5
+	camera.position.z = 8.0
+	camera_pivot.rotation.x = -0.35
+	camera_pivot.rotation.y = 0.0
 	car.enter(self)
 
 func _exit_car() -> void:
 	_in_car = false
 	visible = true
 	velocity = Vector3.ZERO
+	camera_pivot.position.y = 1.5
+	camera.position.z = 5.0
 	camera_pivot.rotation.y = 0.0
+	camera_pivot.rotation.x = _pitch
 	# step out to the side of the car
 	global_position = _current_car.global_position + _current_car.transform.basis.x * 2.5
 	global_position.y = _current_car.global_position.y + 1.0
