@@ -18,8 +18,15 @@ scripts/         # .gd scripts
   player.gd      # movement, camera, shooting, car enter/exit
   dummy.gd       # patrol AI, take_hit(), get_run_over(), debris spawn
   car.gd         # driving, drift, player-glue, run-over detection
-docs/            # design documents
+docs/
+  game_design_doc.md       # game vision, features, story
+  technical_design_doc.md  # architecture, systems, props, known issues
 ```
+
+## Reference Docs
+
+- **Game design**: `docs/game_design_doc.md` — vision, planned features, art style, story
+- **Technical design**: `docs/technical_design_doc.md` — architecture, all systems deep-dive, props list, rendering, known issues
 
 ---
 
