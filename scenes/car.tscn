@@ -1,24 +1,151 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=28 format=3]
 
 [ext_resource type="Script" path="res://scripts/car.gd" id="1"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_1"]
-size = Vector3(2, 1, 3.5)
+[sub_resource type="BoxShape3D" id="col"]
+size = Vector3(2.2, 1.1, 4.0)
 
-[sub_resource type="BoxMesh" id="BoxMesh_1"]
-size = Vector3(2, 1, 3.5)
+[sub_resource type="BoxMesh" id="mesh_body"]
+size = Vector3(2.2, 0.55, 3.8)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1"]
-albedo_color = Color(1, 0.45, 0, 1)
+[sub_resource type="BoxMesh" id="mesh_cabin"]
+size = Vector3(1.5, 0.52, 1.9)
+
+[sub_resource type="BoxMesh" id="mesh_bumper"]
+size = Vector3(2.2, 0.2, 0.22)
+
+[sub_resource type="BoxMesh" id="mesh_spoiler"]
+size = Vector3(1.5, 0.1, 0.2)
+
+[sub_resource type="BoxMesh" id="mesh_spoiler_post"]
+size = Vector3(0.1, 0.25, 0.12)
+
+[sub_resource type="BoxMesh" id="mesh_wheel"]
+size = Vector3(0.3, 0.58, 0.58)
+
+[sub_resource type="BoxMesh" id="mesh_light"]
+size = Vector3(0.32, 0.18, 0.1)
+
+[sub_resource type="BoxMesh" id="mesh_glass"]
+size = Vector3(1.3, 0.44, 0.1)
+
+[sub_resource type="BoxMesh" id="mesh_rear_glass"]
+size = Vector3(1.3, 0.38, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="mat_orange"]
+albedo_color = Color(1, 0.42, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_dark"]
+albedo_color = Color(0.2, 0.2, 0.22, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_wheel"]
+albedo_color = Color(0.1, 0.1, 0.1, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_headlight"]
+albedo_color = Color(1.0, 0.97, 0.8, 1)
+emission_enabled = true
+emission = Color(1.0, 0.97, 0.8, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="StandardMaterial3D" id="mat_taillight"]
+albedo_color = Color(1.0, 0.05, 0.05, 1)
+emission_enabled = true
+emission = Color(1.0, 0.05, 0.05, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="StandardMaterial3D" id="mat_glass"]
+albedo_color = Color(0.4, 0.65, 1.0, 0.6)
+transparency = 1
 
 [node name="Car" type="CharacterBody3D"]
 collision_layer = 8
 collision_mask = 5
 script = ExtResource("1")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_1")
-surface_material_override/0 = SubResource("StandardMaterial3D_1")
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("BoxShape3D_1")
+shape = SubResource("col")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+mesh = SubResource("mesh_body")
+surface_material_override/0 = SubResource("mat_orange")
+
+[node name="Cabin" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.63, -0.15)
+mesh = SubResource("mesh_cabin")
+surface_material_override/0 = SubResource("mat_orange")
+
+[node name="BumperFront" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.12, 1.96)
+mesh = SubResource("mesh_bumper")
+surface_material_override/0 = SubResource("mat_dark")
+
+[node name="BumperRear" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.12, -1.96)
+mesh = SubResource("mesh_bumper")
+surface_material_override/0 = SubResource("mat_dark")
+
+[node name="Spoiler" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, -1.88)
+mesh = SubResource("mesh_spoiler")
+surface_material_override/0 = SubResource("mat_dark")
+
+[node name="SpoilerPostL" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55, 0.81, -1.88)
+mesh = SubResource("mesh_spoiler_post")
+surface_material_override/0 = SubResource("mat_dark")
+
+[node name="SpoilerPostR" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 0.81, -1.88)
+mesh = SubResource("mesh_spoiler_post")
+surface_material_override/0 = SubResource("mat_dark")
+
+[node name="WheelFL" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.22, -0.2, 1.4)
+mesh = SubResource("mesh_wheel")
+surface_material_override/0 = SubResource("mat_wheel")
+
+[node name="WheelFR" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.22, -0.2, 1.4)
+mesh = SubResource("mesh_wheel")
+surface_material_override/0 = SubResource("mat_wheel")
+
+[node name="WheelRL" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.22, -0.2, -1.4)
+mesh = SubResource("mesh_wheel")
+surface_material_override/0 = SubResource("mat_wheel")
+
+[node name="WheelRR" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.22, -0.2, -1.4)
+mesh = SubResource("mesh_wheel")
+surface_material_override/0 = SubResource("mat_wheel")
+
+[node name="HeadlightL" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.68, 0.22, 1.97)
+mesh = SubResource("mesh_light")
+surface_material_override/0 = SubResource("mat_headlight")
+
+[node name="HeadlightR" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.68, 0.22, 1.97)
+mesh = SubResource("mesh_light")
+surface_material_override/0 = SubResource("mat_headlight")
+
+[node name="TaillightL" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.68, 0.22, -1.97)
+mesh = SubResource("mesh_light")
+surface_material_override/0 = SubResource("mat_taillight")
+
+[node name="TaillightR" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.68, 0.22, -1.97)
+mesh = SubResource("mesh_light")
+surface_material_override/0 = SubResource("mat_taillight")
+
+[node name="Windshield" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0.82)
+mesh = SubResource("mesh_glass")
+surface_material_override/0 = SubResource("mat_glass")
+
+[node name="RearWindow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, -1.05)
+mesh = SubResource("mesh_rear_glass")
+surface_material_override/0 = SubResource("mat_glass")
