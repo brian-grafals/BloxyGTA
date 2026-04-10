@@ -2,8 +2,9 @@
 
 [ext_resource type="Script" path="res://scripts/car.gd" id="1"]
 
-[sub_resource type="BoxShape3D" id="col"]
-size = Vector3(2.2, 1.1, 4.0)
+[sub_resource type="CapsuleShape3D" id="col"]
+radius = 0.55
+height = 3.8
 
 [sub_resource type="BoxMesh" id="mesh_body"]
 size = Vector3(2.2, 0.55, 3.8)
@@ -58,6 +59,7 @@ collision_mask = 5
 script = ExtResource("1")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0)
 shape = SubResource("col")
 
 [node name="Body" type="MeshInstance3D" parent="."]
