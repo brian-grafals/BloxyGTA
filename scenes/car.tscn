@@ -14,11 +14,6 @@ size = Vector3(1.5, 0.52, 1.9)
 [sub_resource type="BoxMesh" id="mesh_bumper"]
 size = Vector3(2.2, 0.2, 0.22)
 
-[sub_resource type="BoxMesh" id="mesh_spoiler"]
-size = Vector3(1.5, 0.1, 0.2)
-
-[sub_resource type="BoxMesh" id="mesh_spoiler_post"]
-size = Vector3(0.1, 0.2, 0.12)
 
 [sub_resource type="BoxMesh" id="mesh_wheel"]
 size = Vector3(0.3, 0.58, 0.58)
@@ -85,20 +80,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.12, 1.96)
 mesh = SubResource("mesh_bumper")
 surface_material_override/0 = SubResource("mat_dark")
 
-[node name="Spoiler" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.14, 1.1)
-mesh = SubResource("mesh_spoiler")
-surface_material_override/0 = SubResource("mat_dark")
-
-[node name="SpoilerPostL" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55, 0.99, 1.1)
-mesh = SubResource("mesh_spoiler_post")
-surface_material_override/0 = SubResource("mat_dark")
-
-[node name="SpoilerPostR" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 0.99, 1.1)
-mesh = SubResource("mesh_spoiler_post")
-surface_material_override/0 = SubResource("mat_dark")
 
 [node name="WheelFL" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.22, -0.2, -1.4)
