@@ -1,22 +1,22 @@
 [gd_scene load_steps=8 format=3]
 
 [sub_resource type="BoxShape3D" id="col"]
-size = Vector3(14, 0.16, 14)
+size = Vector3(14, 0.02, 14)
 
 [sub_resource type="BoxMesh" id="mesh_road"]
-size = Vector3(14, 0.1, 14)
+size = Vector3(14, 0.02, 14)
 
 [sub_resource type="StandardMaterial3D" id="mat_road"]
 albedo_color = Color(0.18, 0.18, 0.18, 1)
 
 [sub_resource type="BoxMesh" id="mesh_cross_h"]
-size = Vector3(0.5, 0.06, 3.0)
+size = Vector3(0.5, 0.01, 3.0)
 
 [sub_resource type="BoxMesh" id="mesh_cross_v"]
-size = Vector3(3.0, 0.06, 0.5)
+size = Vector3(3.0, 0.01, 0.5)
 
 [sub_resource type="BoxMesh" id="mesh_stop"]
-size = Vector3(0.4, 0.06, 14)
+size = Vector3(0.4, 0.01, 14)
 
 [sub_resource type="StandardMaterial3D" id="mat_white"]
 albedo_color = Color(1, 1, 1, 1)
@@ -26,60 +26,60 @@ collision_layer = 1
 collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
 shape = SubResource("col")
 
 [node name="Road" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
 mesh = SubResource("mesh_road")
 surface_material_override/0 = SubResource("mat_road")
 
 [node name="StopLineNorth" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13, -5.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -5.5)
 mesh = SubResource("mesh_stop")
 surface_material_override/0 = SubResource("mat_white")
 
 [node name="StopLineSouth" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13, 5.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 5.5)
 mesh = SubResource("mesh_stop")
 surface_material_override/0 = SubResource("mat_white")
 
 [node name="CrosswalkH1" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.14, 5.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.02, 5.8)
 mesh = SubResource("mesh_cross_h")
 surface_material_override/0 = SubResource("mat_white")
 
 [node name="CrosswalkH2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0, 0.14, 5.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0, 0.02, 5.8)
 mesh = SubResource("mesh_cross_h")
 surface_material_override/0 = SubResource("mat_white")
 
 [node name="CrosswalkH3" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0, 0.14, 5.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0, 0.02, 5.8)
 mesh = SubResource("mesh_cross_h")
 surface_material_override/0 = SubResource("mat_white")
 
 [node name="CrosswalkH4" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.14, 5.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.02, 5.8)
 mesh = SubResource("mesh_cross_h")
 surface_material_override/0 = SubResource("mat_white")
 
 [node name="CrosswalkV1" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 0.14, -2.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 0.02, -2.5)
 mesh = SubResource("mesh_cross_v")
 surface_material_override/0 = SubResource("mat_white")
 
 [node name="CrosswalkV2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 0.14, -1.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 0.02, -1.0)
 mesh = SubResource("mesh_cross_v")
 surface_material_override/0 = SubResource("mat_white")
 
 [node name="CrosswalkV3" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 0.14, 1.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 0.02, 1.0)
 mesh = SubResource("mesh_cross_v")
 surface_material_override/0 = SubResource("mat_white")
 
 [node name="CrosswalkV4" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 0.14, 2.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 0.02, 2.5)
 mesh = SubResource("mesh_cross_v")
 surface_material_override/0 = SubResource("mat_white")
