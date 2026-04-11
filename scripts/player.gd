@@ -117,6 +117,26 @@ func _shoot() -> void:
 	query.exclude = [get_rid()]
 	var result: Dictionary = space_state.intersect_ray(query)
 
-	if result and result.collider.has_method("take_hit"):
-		var ray_dir: Vector3 = camera.project_ray_normal(screen_center)
-		result.collider.take_hit(result.position, ray_dir)
+	if result:
+		_spawn_bullet_hole(result.position, result.normal)
+		if result.collider.has_method("take_hit"):
+			result.collider.take_hit(result.position, camera.project_ray_normal(screen_center))
+
+func _spawn_bullet_hole(pos: Vector3, normal: Vector3) -> void:
+	var hole := MeshInstance3D.new()
+	var mesh := BoxMesh.new()
+	mesh.size = Vector3(0.18, 0.18, 0.01)
+	hole.mesh = mesh
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = Color(0.04, 0.04, 0.04)
+	hole.set_surface_override_material(0, mat)
+	get_tree().current_scene.add_child(hole)
+	hole.global_position = pos + normal * 0.015
+	var up := Vector3.UP if abs(normal.dot(Vector3.UP)) < 0.99 else Vector3.RIGHT
+	hole.look_at(hole.global_position + normal, up)
+	var timer := Timer.new()
+	timer.wait_time = 20.0
+	timer.one_shot = true
+	hole.add_child(timer)
+	timer.timeout.connect(hole.queue_free)
+	timer.start()
