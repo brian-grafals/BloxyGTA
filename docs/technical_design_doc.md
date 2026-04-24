@@ -97,34 +97,115 @@ Debris RigidBody3D nodes use `collision_layer = 0` and `collision_mask = 0` so t
 **Node type:** `CharacterBody3D`
 **Collision:** layer 8 (Car), mask 5 (World + Enemy)
 
-### Driving
-- W/S: accelerate/brake up to ±22 u/s (forward) or ±9.9 u/s (reverse)
-- A/D: steering, only effective above 0.5 u/s
-- Space: drift mode — grip drops from 0.85 → 0.05
-- Velocity is lerped toward the car's facing direction each frame (grip system)
-- When not occupied: car coasts to a stop
+### Scene Structure
 
-### Drift System
 ```
-grip = DRIFT_GRIP (0.05) if Space held else NORMAL_GRIP (0.85)
-velocity.x = lerp(velocity.x, target_x, grip)
-velocity.z = lerp(velocity.z, target_z, grip)
+Car (CharacterBody3D)
+├── CollisionShape3D (CapsuleShape3D, horizontal) ← untouched by body roll
+└── CarBody (Node3D)                              ← rotated by script for body roll
+    ├── Body, Cabin, BumperFront, BumperRear
+    ├── WheelFL, WheelFR                          ← Y-rotated for steering animation
+    ├── WheelRL, WheelRR
+    ├── HeadlightL/R, TaillightL/R
+    └── Windshield, RearWindow
 ```
-Low grip causes velocity to lag behind facing direction — creates slide effect.
 
-### Run-Over Detection
-After `move_and_slide()`, iterates `get_slide_collision_count()` and calls `get_run_over(speed, dir)` on any collider that has that method.
+`CarBody` exists solely to separate visual rotation from physics. `_car_body.rotation_degrees.z` produces body roll without tilting the capsule collider.
 
-### Visual Structure
-Multi-mesh bloxy sports car (all BoxMesh3D):
-- Orange body + cabin (cabin shifted toward rear = long hood look)
-- Dark gray front/rear bumpers
-- 4 black wheels (sticking out sides)
-- Yellow emissive headlights (front, -Z)
-- Red emissive taillights (rear, +Z)
-- Blue semi-transparent windshield + rear window
+### Parameter Reference
 
-**Forward direction:** Car moves along `-transform.basis.z`. All front visuals are at negative Z, rear at positive Z.
+| Parameter | Default | Controls |
+|---|---|---|
+| `max_speed` | 22.0 u/s | Forward speed cap |
+| `reverse_speed_ratio` | 0.45 | Reverse cap = max_speed × ratio |
+| `acceleration` | 14.0 u/s² | Base drive force (peak torque) |
+| `engine_brake_ratio` | 0.55 | Coast decel = accel × ratio |
+| `torque_falloff_start` | 0.55 | Fraction of max_speed where torque begins dropping |
+| `steer_speed_low` | 2.4 rad/s | Steering rate at low speed |
+| `steer_speed_high` | 0.9 rad/s | Steering rate at highway speed |
+| `steer_falloff_start` | 8.0 u/s | Speed where steering reduction begins |
+| `steer_falloff_end` | 20.0 u/s | Speed where steering reduction is maximum |
+| `handbrake_steer_mult` | 1.6× | Steer rate boost during handbrake |
+| `normal_grip` | 0.85 | Lateral damping at normal driving |
+| `handbrake_grip` | 0.20 | Lateral damping during handbrake slide |
+| `grip_recovery_rate` | 4.0 /s | How fast grip returns after releasing handbrake |
+| `wheelspin_grip_mult` | 0.55× | Grip multiplier during launch wheelspin |
+| `wheelspin_speed_threshold` | 4.0 u/s | Exit wheelspin below this speed |
+| `body_roll_max_deg` | 6.0° | Peak visual body roll angle |
+| `body_roll_speed` | 6.0 | Body roll lerp rate |
+| `wheel_steer_max_deg` | 25.0° | Max front wheel visual turn angle |
+
+### Physics Loop (60 Hz)
+
+**A — Gravity:** `velocity.y -= gravity * delta` when airborne.
+
+**B — Unoccupied coast:** Speed and velocity lerp toward 0.
+
+**C — Throttle / torque curve:** `torque_at_speed()` returns full acceleration up to `torque_falloff_start × max_speed`, then linearly decays to 0 at `max_speed`.
+
+```
+Torque
+ 14 |████████████\
+    |             \
+  0 |______________\___
+    0            12.1  22.0   speed (u/s)
+    (falloff_start=0.55 × 22 = 12.1)
+```
+
+**D — Wheelspin:** When throttle held at `abs(speed) < 4.0 u/s`, grip drops to `wheelspin_grip_mult × normal_grip` — rear breaks loose at standing launch.
+
+**E — Handbrake grip state machine:** `_drift_grip_t` (0→1) blends between `handbrake_grip` and `normal_grip`. Drops 3× faster on press than recovery on release — instant slide entry, gradual catch.
+
+```
+_drift_grip_t: 1.0 ──── (handbrake press) ──▶ 0.0   (rate × 3)
+               0.0 ──── (handbrake release) ─▶ 1.0   (rate × 1)
+effective grip = lerp(handbrake_grip=0.20, normal_grip=0.85, _drift_grip_t)
+```
+
+**F — Speed-sensitive steering:**
+
+| Speed | Steer rate |
+|---|---|
+| 0–8 u/s | 2.4 rad/s |
+| 14 u/s | 1.65 rad/s |
+| 20 u/s | 0.9 rad/s |
+
+**G — Lateral grip:** `velocity.xz` lerped toward car-forward direction at rate `compute_grip()`.
+
+**H — `move_and_slide()` and run-over detection:** After slide, iterates collisions and calls `get_run_over(speed, dir)` on valid colliders.
+
+**I — Driver glue:** Player position/rotation snapped to car each frame.
+
+### Visual Systems (`_process`, render rate)
+
+**Body roll:** `_car_body.rotation_degrees.z` lerps toward `steer_input × speed_fraction × body_roll_max_deg`. Cosmetic only — collision capsule does not tilt.
+
+**Wheel steering:** `WheelFL` and `WheelFR` `rotation_degrees.y` lerps toward `−steer_input × wheel_steer_max_deg` at rate 12.0/s.
+
+### Testable Pure Functions
+
+Three `static func` helpers can be called without instantiating the scene:
+
+- `torque_at_speed(spd, max_spd, accel, falloff_start)` — torque curve
+- `effective_steer_speed(spd, low, high, start, end_spd)` — steering rate
+- `compute_grip(drift_grip_t, normal_grip, handbrake_grip)` — effective grip
+
+Tests live in `test/unit/test_car_physics.gd` (GdUnit4) and `test/run_tests.gd` (standalone).
+
+**Run standalone tests headlessly:**
+```bash
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path . test/run_tests.tscn
+```
+
+### Tuning Presets
+
+| Feel | `normal_grip` | `handbrake_grip` | `steer_speed_low` | `torque_falloff_start` |
+|---|---|---|---|---|
+| GTA 3 floaty | 0.70 | 0.05 | 2.8 | 0.35 |
+| **GTA SA (default)** | **0.85** | **0.20** | **2.4** | **0.55** |
+| GTA 5 sticky | 0.93 | 0.35 | 2.0 | 0.70 |
+
+**Forward direction:** Car moves along `-transform.basis.z`. Front visuals are at negative Z, rear at positive Z.
 
 ---
 
@@ -188,3 +269,4 @@ All props live in `scenes/props/` as standalone `.tscn` scenes. They are all:
 | No NPC spawning | Dummies are hand-placed in main.tscn |
 | No wanted level | Police station is visual only |
 | No audio | No sound effects or music yet |
+| No suspension simulation | Body roll is cosmetic only. Upgrade path: RigidBody3D + RayCast3D at 120 Hz physics tick |

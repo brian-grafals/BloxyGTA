@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3]
+[gd_scene load_steps=29 format=3]
 
 [ext_resource type="Script" path="res://scripts/car.gd" id="1"]
 
@@ -63,73 +63,75 @@ script = ExtResource("1")
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0)
 shape = SubResource("col")
 
-[node name="Body" type="MeshInstance3D" parent="."]
+[node name="CarBody" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="CarBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
 mesh = SubResource("mesh_body")
 surface_material_override/0 = SubResource("mat_orange")
 
-[node name="Cabin" type="MeshInstance3D" parent="."]
+[node name="Cabin" type="MeshInstance3D" parent="CarBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.63, 0.15)
 mesh = SubResource("mesh_cabin")
 surface_material_override/0 = SubResource("mat_orange")
 
-[node name="BumperFront" type="MeshInstance3D" parent="."]
+[node name="BumperFront" type="MeshInstance3D" parent="CarBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.12, -1.96)
 mesh = SubResource("mesh_bumper")
 surface_material_override/0 = SubResource("mat_dark")
 
-[node name="BumperRear" type="MeshInstance3D" parent="."]
+[node name="BumperRear" type="MeshInstance3D" parent="CarBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.12, 1.96)
 mesh = SubResource("mesh_bumper")
 surface_material_override/0 = SubResource("mat_dark")
 
 
-[node name="WheelFL" type="MeshInstance3D" parent="."]
+[node name="WheelFL" type="MeshInstance3D" parent="CarBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.22, -0.2, -1.4)
 mesh = SubResource("mesh_wheel")
 surface_material_override/0 = SubResource("mat_wheel")
 
-[node name="WheelFR" type="MeshInstance3D" parent="."]
+[node name="WheelFR" type="MeshInstance3D" parent="CarBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.22, -0.2, -1.4)
 mesh = SubResource("mesh_wheel")
 surface_material_override/0 = SubResource("mat_wheel")
 
-[node name="WheelRL" type="MeshInstance3D" parent="."]
+[node name="WheelRL" type="MeshInstance3D" parent="CarBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.22, -0.2, 1.4)
 mesh = SubResource("mesh_wheel")
 surface_material_override/0 = SubResource("mat_wheel")
 
-[node name="WheelRR" type="MeshInstance3D" parent="."]
+[node name="WheelRR" type="MeshInstance3D" parent="CarBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.22, -0.2, 1.4)
 mesh = SubResource("mesh_wheel")
 surface_material_override/0 = SubResource("mat_wheel")
 
-[node name="HeadlightL" type="MeshInstance3D" parent="."]
+[node name="HeadlightL" type="MeshInstance3D" parent="CarBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.68, 0.22, -1.97)
 mesh = SubResource("mesh_light")
 surface_material_override/0 = SubResource("mat_headlight")
 
-[node name="HeadlightR" type="MeshInstance3D" parent="."]
+[node name="HeadlightR" type="MeshInstance3D" parent="CarBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.68, 0.22, -1.97)
 mesh = SubResource("mesh_light")
 surface_material_override/0 = SubResource("mat_headlight")
 
-[node name="TaillightL" type="MeshInstance3D" parent="."]
+[node name="TaillightL" type="MeshInstance3D" parent="CarBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.68, 0.22, 1.97)
 mesh = SubResource("mesh_light")
 surface_material_override/0 = SubResource("mat_taillight")
 
-[node name="TaillightR" type="MeshInstance3D" parent="."]
+[node name="TaillightR" type="MeshInstance3D" parent="CarBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.68, 0.22, 1.97)
 mesh = SubResource("mesh_light")
 surface_material_override/0 = SubResource("mat_taillight")
 
-[node name="Windshield" type="MeshInstance3D" parent="."]
+[node name="Windshield" type="MeshInstance3D" parent="CarBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, -0.82)
 mesh = SubResource("mesh_glass")
 surface_material_override/0 = SubResource("mat_glass")
 
-[node name="RearWindow" type="MeshInstance3D" parent="."]
+[node name="RearWindow" type="MeshInstance3D" parent="CarBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 1.05)
 mesh = SubResource("mesh_rear_glass")
 surface_material_override/0 = SubResource("mat_glass")
