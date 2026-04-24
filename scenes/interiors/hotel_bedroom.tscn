@@ -1,0 +1,396 @@
+[gd_scene format=3 uid="uid://dalqpage60cf7"]
+
+[ext_resource type="Script" uid="uid://c7x1aj5fakb5x" path="res://scripts/interior_trigger.gd" id="1"]
+
+[sub_resource type="BoxShape3D" id="col_floor"]
+size = Vector3(12, 0.2, 16)
+
+[sub_resource type="BoxMesh" id="mesh_floor"]
+size = Vector3(12, 0.2, 16)
+
+[sub_resource type="StandardMaterial3D" id="mat_floor"]
+albedo_color = Color(0.62, 0.48, 0.32, 1)
+
+[sub_resource type="BoxShape3D" id="col_ceiling"]
+size = Vector3(12, 0.2, 16)
+
+[sub_resource type="BoxMesh" id="mesh_ceiling"]
+size = Vector3(12, 0.2, 16)
+
+[sub_resource type="StandardMaterial3D" id="mat_ceiling"]
+albedo_color = Color(0.96, 0.96, 0.94, 1)
+
+[sub_resource type="BoxShape3D" id="col_wall_lr"]
+size = Vector3(0.2, 4, 16)
+
+[sub_resource type="BoxMesh" id="mesh_wall_lr"]
+size = Vector3(0.2, 4, 16)
+
+[sub_resource type="StandardMaterial3D" id="mat_wall"]
+albedo_color = Color(0.88, 0.84, 0.78, 1)
+
+[sub_resource type="BoxShape3D" id="col_wall_fb"]
+size = Vector3(12, 4, 0.2)
+
+[sub_resource type="BoxMesh" id="mesh_wall_fb"]
+size = Vector3(12, 4, 0.2)
+
+[sub_resource type="BoxShape3D" id="col_bed_base"]
+size = Vector3(3, 0.5, 5)
+
+[sub_resource type="BoxMesh" id="mesh_bed_base"]
+size = Vector3(3, 0.5, 5)
+
+[sub_resource type="StandardMaterial3D" id="mat_bed_frame"]
+albedo_color = Color(0.35, 0.2, 0.06, 1)
+
+[sub_resource type="BoxMesh" id="mesh_mattress"]
+size = Vector3(2.9, 0.3, 4.8)
+
+[sub_resource type="StandardMaterial3D" id="mat_mattress"]
+albedo_color = Color(0.95, 0.93, 0.88, 1)
+
+[sub_resource type="BoxMesh" id="mesh_blanket"]
+size = Vector3(2.9, 0.15, 3.2)
+
+[sub_resource type="StandardMaterial3D" id="mat_blanket"]
+albedo_color = Color(0.18, 0.35, 0.62, 1)
+
+[sub_resource type="BoxMesh" id="mesh_pillow"]
+size = Vector3(1.2, 0.2, 0.6)
+
+[sub_resource type="StandardMaterial3D" id="mat_pillow"]
+albedo_color = Color(0.96, 0.94, 0.9, 1)
+
+[sub_resource type="BoxShape3D" id="col_headboard"]
+size = Vector3(3, 1.4, 0.2)
+
+[sub_resource type="BoxMesh" id="mesh_headboard"]
+size = Vector3(3, 1.4, 0.2)
+
+[sub_resource type="BoxShape3D" id="col_tv_dresser"]
+size = Vector3(2.6, 0.7, 0.6)
+
+[sub_resource type="BoxMesh" id="mesh_tv_dresser"]
+size = Vector3(2.6, 0.7, 0.6)
+
+[sub_resource type="StandardMaterial3D" id="mat_cabinet"]
+albedo_color = Color(0.55, 0.42, 0.25, 1)
+
+[sub_resource type="BoxMesh" id="mesh_tv_body"]
+size = Vector3(2.4, 1.5, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="mat_tv_body"]
+albedo_color = Color(0.1, 0.1, 0.1, 1)
+
+[sub_resource type="BoxMesh" id="mesh_tv_stand"]
+size = Vector3(0.4, 0.5, 0.4)
+
+[sub_resource type="BoxMesh" id="mesh_tv_screen"]
+size = Vector3(2.2, 1.3, 0.08)
+
+[sub_resource type="StandardMaterial3D" id="mat_tv_screen"]
+albedo_color = Color(0.04, 0.04, 0.06, 1)
+emission_enabled = true
+emission = Color(0.08, 0.15, 0.35, 1)
+emission_energy_multiplier = 0.8
+
+[sub_resource type="BoxShape3D" id="col_counter_body"]
+size = Vector3(6, 1, 0.9)
+
+[sub_resource type="BoxMesh" id="mesh_counter_body"]
+size = Vector3(6, 1, 0.9)
+
+[sub_resource type="BoxShape3D" id="col_counter"]
+size = Vector3(6, 0.15, 0.9)
+
+[sub_resource type="BoxMesh" id="mesh_counter"]
+size = Vector3(6, 0.15, 0.9)
+
+[sub_resource type="StandardMaterial3D" id="mat_counter"]
+albedo_color = Color(0.72, 0.62, 0.48, 1)
+
+[sub_resource type="BoxShape3D" id="col_cabinet_upper"]
+size = Vector3(2.8, 0.8, 0.4)
+
+[sub_resource type="BoxMesh" id="mesh_cabinet_upper"]
+size = Vector3(2.8, 0.8, 0.4)
+
+[sub_resource type="BoxMesh" id="mesh_sink_basin"]
+size = Vector3(0.7, 0.12, 0.55)
+
+[sub_resource type="StandardMaterial3D" id="mat_sink"]
+albedo_color = Color(0.78, 0.8, 0.82, 1)
+
+[sub_resource type="BoxShape3D" id="col_fridge"]
+size = Vector3(1, 2, 0.85)
+
+[sub_resource type="BoxMesh" id="mesh_fridge"]
+size = Vector3(1, 2, 0.85)
+
+[sub_resource type="StandardMaterial3D" id="mat_appliance"]
+albedo_color = Color(0.82, 0.82, 0.82, 1)
+
+[sub_resource type="BoxShape3D" id="col_oven"]
+size = Vector3(0.9, 0.95, 0.82)
+
+[sub_resource type="BoxMesh" id="mesh_oven"]
+size = Vector3(0.9, 0.95, 0.82)
+
+[sub_resource type="StandardMaterial3D" id="mat_oven"]
+albedo_color = Color(0.22, 0.22, 0.22, 1)
+
+[sub_resource type="BoxMesh" id="mesh_oven_door"]
+size = Vector3(0.82, 0.4, 0.06)
+
+[sub_resource type="BoxShape3D" id="col_trigger"]
+size = Vector3(2.5, 3, 1)
+
+[node name="HotelBedroom" type="Node3D" unique_id=1363230538]
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=48618170]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=854997575]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+shape = SubResource("col_floor")
+
+[node name="Mesh" type="MeshInstance3D" parent="Floor" unique_id=697959036]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+mesh = SubResource("mesh_floor")
+surface_material_override/0 = SubResource("mat_floor")
+
+[node name="Ceiling" type="StaticBody3D" parent="." unique_id=1549914515]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ceiling" unique_id=1933896035]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.1, 0)
+shape = SubResource("col_ceiling")
+
+[node name="Mesh" type="MeshInstance3D" parent="Ceiling" unique_id=787283661]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.1, 0)
+mesh = SubResource("mesh_ceiling")
+surface_material_override/0 = SubResource("mat_ceiling")
+
+[node name="WallLeft" type="StaticBody3D" parent="." unique_id=1905853299]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WallLeft" unique_id=396787520]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.1, 2, 0)
+shape = SubResource("col_wall_lr")
+
+[node name="Mesh" type="MeshInstance3D" parent="WallLeft" unique_id=69399074]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.1, 2, 0)
+mesh = SubResource("mesh_wall_lr")
+surface_material_override/0 = SubResource("mat_wall")
+
+[node name="WallRight" type="StaticBody3D" parent="." unique_id=1665147864]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WallRight" unique_id=1642003161]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.1, 2, 0)
+shape = SubResource("col_wall_lr")
+
+[node name="Mesh" type="MeshInstance3D" parent="WallRight" unique_id=440836452]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.1, 2, 0)
+mesh = SubResource("mesh_wall_lr")
+surface_material_override/0 = SubResource("mat_wall")
+
+[node name="WallBack" type="StaticBody3D" parent="." unique_id=1890763457]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WallBack" unique_id=521381928]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 8.1)
+shape = SubResource("col_wall_fb")
+
+[node name="Mesh" type="MeshInstance3D" parent="WallBack" unique_id=408751855]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 8.1)
+mesh = SubResource("mesh_wall_fb")
+surface_material_override/0 = SubResource("mat_wall")
+
+[node name="WallFront" type="StaticBody3D" parent="." unique_id=819271525]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WallFront" unique_id=196997369]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -8.1)
+shape = SubResource("col_wall_fb")
+
+[node name="Mesh" type="MeshInstance3D" parent="WallFront" unique_id=747510750]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -8.1)
+mesh = SubResource("mesh_wall_fb")
+surface_material_override/0 = SubResource("mat_wall")
+
+[node name="Bed" type="Node3D" parent="." unique_id=1855080180]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3, 0, 4)
+
+[node name="Base" type="StaticBody3D" parent="Bed" unique_id=59562050]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bed/Base" unique_id=627192283]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+shape = SubResource("col_bed_base")
+
+[node name="Mesh" type="MeshInstance3D" parent="Bed/Base" unique_id=2008986499]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+mesh = SubResource("mesh_bed_base")
+surface_material_override/0 = SubResource("mat_bed_frame")
+
+[node name="Mattress" type="MeshInstance3D" parent="Bed" unique_id=2104580925]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+mesh = SubResource("mesh_mattress")
+surface_material_override/0 = SubResource("mat_mattress")
+
+[node name="Blanket" type="MeshInstance3D" parent="Bed" unique_id=128247263]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0.8)
+mesh = SubResource("mesh_blanket")
+surface_material_override/0 = SubResource("mat_blanket")
+
+[node name="Pillow1" type="MeshInstance3D" parent="Bed" unique_id=1398367265]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7, 0.9, -1.9)
+mesh = SubResource("mesh_pillow")
+surface_material_override/0 = SubResource("mat_pillow")
+
+[node name="Pillow2" type="MeshInstance3D" parent="Bed" unique_id=649441082]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, 0.9, -1.9)
+mesh = SubResource("mesh_pillow")
+surface_material_override/0 = SubResource("mat_pillow")
+
+[node name="Headboard" type="StaticBody3D" parent="Bed" unique_id=330587377]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bed/Headboard" unique_id=1120597997]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -2.6)
+shape = SubResource("col_headboard")
+
+[node name="Mesh" type="MeshInstance3D" parent="Bed/Headboard" unique_id=1308846381]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -2.6)
+mesh = SubResource("mesh_headboard")
+surface_material_override/0 = SubResource("mat_bed_frame")
+
+[node name="TV" type="Node3D" parent="." unique_id=358568734]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -5)
+
+[node name="Dresser" type="StaticBody3D" parent="TV" unique_id=1373729116]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TV/Dresser" unique_id=172961430]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+shape = SubResource("col_tv_dresser")
+
+[node name="Mesh" type="MeshInstance3D" parent="TV/Dresser" unique_id=2024844525]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, -2.544485)
+mesh = SubResource("mesh_tv_dresser")
+surface_material_override/0 = SubResource("mat_cabinet")
+
+[node name="Body" type="MeshInstance3D" parent="TV" unique_id=1761165365]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.9948134, 2.3605502, 10.609007)
+mesh = SubResource("mesh_tv_body")
+surface_material_override/0 = SubResource("mat_tv_body")
+
+[node name="Stand" type="MeshInstance3D" parent="TV/Body" unique_id=1418648220]
+transform = Transform3D(8.25915, 0, -7.1054274e-15, 0, 1, 0, -2.842171e-14, 0, 2.382989, 0, -1, 0.1369853)
+mesh = SubResource("mesh_tv_stand")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("mat_tv_body")
+
+[node name="Screen" type="MeshInstance3D" parent="TV/Body" unique_id=1857202425]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.041702747)
+mesh = SubResource("mesh_tv_screen")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("mat_tv_screen")
+
+[node name="Kitchen" type="Node3D" parent="." unique_id=1938441942]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0, -7.5087986)
+
+[node name="CounterBody" type="StaticBody3D" parent="Kitchen" unique_id=956894241]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Kitchen/CounterBody" unique_id=1306408818]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("col_counter_body")
+
+[node name="Mesh" type="MeshInstance3D" parent="Kitchen/CounterBody" unique_id=277443754]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("mesh_counter_body")
+surface_material_override/0 = SubResource("mat_cabinet")
+
+[node name="CounterTop" type="StaticBody3D" parent="Kitchen" unique_id=1928961581]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Kitchen/CounterTop" unique_id=895908634]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.075, 0)
+shape = SubResource("col_counter")
+
+[node name="Mesh" type="MeshInstance3D" parent="Kitchen/CounterTop" unique_id=1049386419]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.075, 0)
+mesh = SubResource("mesh_counter")
+surface_material_override/0 = SubResource("mat_counter")
+
+[node name="CabinetLeft" type="StaticBody3D" parent="Kitchen" unique_id=823773771]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Kitchen/CabinetLeft" unique_id=1673558082]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 2.8, 0.25)
+shape = SubResource("col_cabinet_upper")
+
+[node name="Mesh" type="MeshInstance3D" parent="Kitchen/CabinetLeft" unique_id=101693835]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 2.8, 0.25)
+mesh = SubResource("mesh_cabinet_upper")
+surface_material_override/0 = SubResource("mat_cabinet")
+
+[node name="CabinetRight" type="StaticBody3D" parent="Kitchen" unique_id=1926676359]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Kitchen/CabinetRight" unique_id=1986265853]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 2.8, 0.25)
+shape = SubResource("col_cabinet_upper")
+
+[node name="Mesh" type="MeshInstance3D" parent="Kitchen/CabinetRight" unique_id=1319759911]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 2.8, 0.25)
+mesh = SubResource("mesh_cabinet_upper")
+surface_material_override/0 = SubResource("mat_cabinet")
+
+[node name="Sink" type="MeshInstance3D" parent="Kitchen" unique_id=1073256704]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.21, 0)
+mesh = SubResource("mesh_sink_basin")
+surface_material_override/0 = SubResource("mat_sink")
+
+[node name="Fridge" type="StaticBody3D" parent="Kitchen" unique_id=1630399673]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Kitchen/Fridge" unique_id=875098038]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5125847, 1, 0)
+shape = SubResource("col_fridge")
+
+[node name="Mesh" type="MeshInstance3D" parent="Kitchen/Fridge" unique_id=1081179583]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5125847, 1, 0)
+mesh = SubResource("mesh_fridge")
+surface_material_override/0 = SubResource("mat_appliance")
+
+[node name="Oven" type="StaticBody3D" parent="Kitchen" unique_id=1257324882]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4399412e-08, 0, -0.2790966)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Kitchen/Oven" unique_id=1044773066]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.475, 0)
+shape = SubResource("col_oven")
+
+[node name="Mesh" type="MeshInstance3D" parent="Kitchen/Oven" unique_id=987444379]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.475, 0)
+mesh = SubResource("mesh_oven")
+surface_material_override/0 = SubResource("mat_oven")
+
+[node name="OvenDoor" type="MeshInstance3D" parent="Kitchen" unique_id=1734651102]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.4, -0.44)
+mesh = SubResource("mesh_oven_door")
+surface_material_override/0 = SubResource("mat_appliance")
+
+[node name="ExitTrigger" type="Area3D" parent="." unique_id=2082268069]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -7.5)
+collision_mask = 2
+script = ExtResource("1")
+destination = Vector3(-200, -59, -9)
+portal_color = Color(1, 0.5, 0.1, 1)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ExitTrigger" unique_id=383480399]
+shape = SubResource("col_trigger")

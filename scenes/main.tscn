@@ -18,6 +18,12 @@
 [ext_resource type="PackedScene" path="res://scenes/props/gun_shop.tscn" id="16"]
 [ext_resource type="PackedScene" path="res://scenes/props/police_station.tscn" id="17"]
 [ext_resource type="PackedScene" path="res://scenes/props/hotel.tscn" id="18"]
+[ext_resource type="PackedScene" uid="uid://dhh2hn01b0fno" path="res://scenes/interiors/hotel_lobby.tscn" id="19"]
+[ext_resource type="PackedScene" uid="uid://dalqpage60cf7" path="res://scenes/interiors/hotel_bedroom.tscn" id="20"]
+[ext_resource type="PackedScene" uid="uid://cobsglvnw2hck" path="res://scenes/interiors/clothes_shop_interior.tscn" id="21"]
+[ext_resource type="PackedScene" uid="uid://dbmrnf8lw80cf" path="res://scenes/interiors/gun_shop_interior.tscn" id="22"]
+[ext_resource type="PackedScene" uid="uid://dkeyfdmngilkp" path="res://scenes/interiors/police_station_interior.tscn" id="23"]
+[ext_resource type="Script" uid="uid://c7x1aj5fakb5x" path="res://scripts/interior_trigger.gd" id="24"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 sky_top_color = Color(0.38, 0.72, 0.98, 1)
@@ -96,6 +102,9 @@ size = Vector3(8, 6, 4)
 
 [sub_resource type="BoxMesh" id="mesh_c3c"]
 size = Vector3(6, 4, 4)
+
+[sub_resource type="BoxShape3D" id="col_door_trigger"]
+size = Vector3(3, 3, 3)
 
 [node name="Main" type="Node3D" unique_id=2072267275]
 
@@ -222,7 +231,31 @@ transform = Transform3D(-4.3711378e-08, 0, 9.510831, 0, 1, 0, -0.99999976, 0, -4
 transform = Transform3D(-4.3711378e-08, 0, 9.510831, 0, 1, 0, -0.99999976, 0, -4.1573162e-07, -66.17142, 0, 7.69042)
 
 [node name="Bench1" parent="." unique_id=822704049 instance=ExtResource("9")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -30)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.530073, 0, 6.7195673)
+
+[node name="Bench2" parent="." unique_id=2004265040 instance=ExtResource("9")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.376293, 0, 6.7195673)
+
+[node name="Bench3" parent="." unique_id=1844745922 instance=ExtResource("9")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.14395, 0, 6.7195673)
+
+[node name="Bench4" parent="." unique_id=357611366 instance=ExtResource("9")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 65.008484, 0, 6.7195673)
+
+[node name="Bench5" parent="." unique_id=544665184 instance=ExtResource("9")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 62.278404, 0, 24.88076)
+
+[node name="Bench6" parent="." unique_id=1715100321 instance=ExtResource("9")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -7.200672, 0, 25.184887)
+
+[node name="Bench8" parent="." unique_id=1822997965 instance=ExtResource("9")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -37.788734, 0, 25.184887)
+
+[node name="Bench9" parent="." unique_id=889226922 instance=ExtResource("9")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -64.444756, 0, 25.184887)
+
+[node name="Bench7" parent="." unique_id=1649321007 instance=ExtResource("9")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -8.572823, 0, 26.520332)
 
 [node name="Tree1" parent="." unique_id=676485149 instance=ExtResource("10")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -67.965576, 0, 56.184578)
@@ -309,7 +342,7 @@ transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 50.6
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 26.949257, 0, 28.92662)
 
 [node name="SkyscraperShort3" parent="." unique_id=66806710 instance=ExtResource("14")]
-transform = Transform3D(-0.9995378, 0, -0.030398842, 0, 1, 0, 0.030398842, 0, -0.9995378, 5.587948, 0, 28.92662)
+transform = Transform3D(-0.9995378, 0, -0.030398842, 0, 1, 0, 0.030398842, 0, -0.9995378, 5.587948, 0, 29.650948)
 
 [node name="SkyscraperShort4" parent="." unique_id=2047608856 instance=ExtResource("14")]
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -32.624256, 0, 28.92662)
@@ -581,3 +614,68 @@ surface_material_override/0 = SubResource("mat_cloud")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 3, 0)
 mesh = SubResource("mesh_c3c")
 surface_material_override/0 = SubResource("mat_cloud")
+
+[node name="HotelLobby" parent="." unique_id=1948322850 instance=ExtResource("19")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -200, -60, 0)
+
+[node name="HotelBedroom" parent="." unique_id=677898842 instance=ExtResource("20")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -200, -60, 50)
+
+[node name="ClothesShopInterior" parent="." unique_id=569093258 instance=ExtResource("21")]
+transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.3, -200, -60, -50)
+
+[node name="GunShopInterior" parent="." unique_id=1921786940 instance=ExtResource("22")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -200, -60, -120)
+
+[node name="PoliceStationInterior" parent="." unique_id=1091610885 instance=ExtResource("23")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -200, -60, 200)
+
+[node name="HotelEntrance" type="Area3D" parent="." unique_id=1017579577]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 58.108833, 1.5, 63)
+collision_mask = 2
+script = ExtResource("24")
+destination = Vector3(-200, -59, -9)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HotelEntrance" unique_id=1638234700]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5256462, 0, 0)
+shape = SubResource("col_door_trigger")
+
+[node name="ClothesShopEntrance" type="Area3D" parent="." unique_id=1300090605]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 53, 1.5, 40)
+collision_mask = 2
+script = ExtResource("24")
+destination = Vector3(-200, -59, -50)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ClothesShopEntrance" unique_id=1250046619]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8.070606)
+shape = SubResource("col_door_trigger")
+
+[node name="GunShopEntrance" type="Area3D" parent="." unique_id=1894356875]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45, 1.5, 41)
+collision_mask = 2
+script = ExtResource("24")
+destination = Vector3(-200, -59, -120)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="GunShopEntrance" unique_id=1102411491]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.309021)
+shape = SubResource("col_door_trigger")
+
+[node name="PoliceStationEntrance" type="Area3D" parent="." unique_id=244225565]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 1.5, 90)
+collision_mask = 2
+script = ExtResource("24")
+destination = Vector3(-200, -59, 200)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PoliceStationEntrance" unique_id=849224901]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -11.339363)
+shape = SubResource("col_door_trigger")
+
+[node name="PoliceStationEntrance2" type="Area3D" parent="." unique_id=779433027]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47, 1.5, 90)
+collision_mask = 2
+script = ExtResource("24")
+destination = Vector3(-200, -59, 200)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PoliceStationEntrance2" unique_id=500944312]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10.847771)
+shape = SubResource("col_door_trigger")
