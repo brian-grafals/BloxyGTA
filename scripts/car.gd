@@ -18,7 +18,8 @@ extends RigidBody3D
 @export var max_steer_angle: float = 0.5      # rad (~28°)
 @export var steer_rate: float = 3.0           # rad/s input rate
 @export var steer_speed_decay: float = 0.04   # steer reduction per u/s
-@export var steering_stiffness: float = 800.0 # N per (rad·m/s) — cornering force at front axle
+@export var steering_stiffness: float = 1400.0 # N per (rad·m/s) — cornering force at front axle
+@export var yaw_damping: float = 3000.0       # N·m per (rad/s) — resists spin when steering stops
 
 # ── Grip (same 0–1 range as before) ──────────────────────────────────────────
 @export var normal_grip: float = 0.85
@@ -187,6 +188,8 @@ func _process_drive() -> void:
 			)
 
 func _process_steering_force() -> void:
+	# Resist current yaw regardless of input — kills spin fast when you release or counter-steer
+	apply_torque(global_transform.basis.y * (-angular_velocity.y * yaw_damping))
 	if abs(_steer_angle) < 0.001:
 		return
 	var lat := global_transform.basis.x
