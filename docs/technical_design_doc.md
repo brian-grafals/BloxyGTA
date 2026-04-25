@@ -94,101 +94,114 @@ Debris RigidBody3D nodes use `collision_layer = 0` and `collision_mask = 0` so t
 
 ## Car (`scripts/car.gd`)
 
-**Node type:** `CharacterBody3D`
+**Node type:** `RigidBody3D` (mass 1500 kg, custom CoM at (0, −0.3, 0))
 **Collision:** layer 8 (Car), mask 5 (World + Enemy)
+**Physics tick:** 120 Hz
 
 ### Scene Structure
 
 ```
-Car (CharacterBody3D)
-├── CollisionShape3D (CapsuleShape3D, horizontal) ← untouched by body roll
-└── CarBody (Node3D)                              ← rotated by script for body roll
+Car (RigidBody3D)
+├── CollisionShape3D (BoxShape3D 2.0×1.0×4.2, offset 0,0.35,0)
+├── WheelFL (RayCast3D)   ← suspension spring + steering ray
+├── WheelFR (RayCast3D)
+├── WheelRL (RayCast3D)
+├── WheelRR (RayCast3D)
+└── CarBody (Node3D)      ← visual container, never rotated by script
     ├── Body, Cabin, BumperFront, BumperRear
-    ├── WheelFL, WheelFR                          ← Y-rotated for steering animation
-    ├── WheelRL, WheelRR
+    ├── WheelMeshFL, WheelMeshFR   ← Y-rotated for steering animation
+    ├── WheelMeshRL, WheelMeshRR
     ├── HeadlightL/R, TaillightL/R
     └── Windshield, RearWindow
 ```
 
-`CarBody` exists solely to separate visual rotation from physics. `_car_body.rotation_degrees.z` produces body roll without tilting the capsule collider.
+Each RayCast3D fires straight down from a wheel anchor point. Contact with the ground produces a Hooke spring + damper force applied **at the contact point** — off-center forces create pitch/roll torques that tilt the body with the terrain.
+
+The BoxShape3D (raised 0.35 m above root) handles side/wall collisions. It does not rest on the ground — the spring forces keep the body suspended.
 
 ### Parameter Reference
 
-| Parameter | Default | Controls |
-|---|---|---|
-| `max_speed` | 22.0 u/s | Forward speed cap |
-| `reverse_speed_ratio` | 0.45 | Reverse cap = max_speed × ratio |
-| `acceleration` | 14.0 u/s² | Base drive force (peak torque) |
-| `engine_brake_ratio` | 0.55 | Coast decel = accel × ratio |
-| `torque_falloff_start` | 0.55 | Fraction of max_speed where torque begins dropping |
-| `steer_speed_low` | 2.4 rad/s | Steering rate at low speed |
-| `steer_speed_high` | 0.9 rad/s | Steering rate at highway speed |
-| `steer_falloff_start` | 8.0 u/s | Speed where steering reduction begins |
-| `steer_falloff_end` | 20.0 u/s | Speed where steering reduction is maximum |
-| `handbrake_steer_mult` | 1.6× | Steer rate boost during handbrake |
-| `normal_grip` | 0.85 | Lateral damping at normal driving |
-| `handbrake_grip` | 0.20 | Lateral damping during handbrake slide |
-| `grip_recovery_rate` | 4.0 /s | How fast grip returns after releasing handbrake |
-| `wheelspin_grip_mult` | 0.55× | Grip multiplier during launch wheelspin |
-| `wheelspin_speed_threshold` | 4.0 u/s | Exit wheelspin below this speed |
-| `body_roll_max_deg` | 6.0° | Peak visual body roll angle |
-| `body_roll_speed` | 6.0 | Body roll lerp rate |
-| `wheel_steer_max_deg` | 25.0° | Max front wheel visual turn angle |
+| Parameter | Default | Units | Controls |
+|---|---|---|---|
+| `engine_force` | 8000 | N | Peak drive force at rear wheels |
+| `brake_force_mult` | 1.8 | × | Braking force relative to engine |
+| `max_reverse_ratio` | 0.45 | fraction | Reverse speed cap |
+| `rest_length` | 0.15 | m | Spring natural length |
+| `resting_ratio` | 0.5 | 0–1 | Spring compressed to this fraction at rest |
+| `damping_ratio` | 0.45 | 0–1 | 0 = no damping, 1 = critical damping |
+| `tire_radius` | 0.3 | m | Distance from spring contact to wheel center |
+| `arb_ratio` | 0.15 | fraction | Anti-roll bar as fraction of spring stiffness |
+| `max_steer_angle` | 0.5 | rad (~28°) | Maximum front wheel deflection |
+| `steer_rate` | 3.0 | rad/s | Input rate limit |
+| `steer_speed_decay` | 0.04 | per u/s | Steer reduction per unit of speed |
+| `normal_grip` | 0.85 | 0–1 | Lateral velocity correction per tick |
+| `handbrake_grip` | 0.20 | 0–1 | Lateral correction during handbrake |
+| `inertia_yaw_mult` | 2.5 | × | GTA heavy-rotation feel (high = sluggish yaw) |
+| `inertia_pitch_mult` | 1.2 | × | Pitch inertia scale |
+| `inertia_roll_mult` | 0.8 | × | Roll inertia scale |
+| `drag_coeff` | 0.35 | Cd | Aerodynamic drag coefficient |
+| `frontal_area` | 2.0 | m² | Frontal cross-section for drag |
 
-### Physics Loop (60 Hz)
+### Physics Architecture
 
-**A — Gravity:** `velocity.y -= gravity * delta` when airborne.
+Two callbacks run each tick:
 
-**B — Unoccupied coast:** Speed and velocity lerp toward 0.
+**`_physics_process(delta)` — applies forces (120 Hz)**
 
-**C — Throttle / torque curve:** `torque_at_speed()` returns full acceleration up to `torque_falloff_start × max_speed`, then linearly decays to 0 at `max_speed`.
+1. Read `_drifting` from handbrake input
+2. Compute `_speed` from local-Z velocity (`-local_vel.z` = positive forward)
+3. `_process_steering` — rate-limit steer angle, rotate RayCast3D nodes for steering rays
+4. `_process_suspension` — spring/damper forces + anti-roll bar per axle
+5. `_process_drive` — engine force at rear wheel contact points (RWD); front+rear braking
+6. `_process_drag` — aerodynamic drag via `apply_central_force()`
+7. Driver glue — snap player position and yaw to car
+
+**`_integrate_forces(state: PhysicsDirectBodyState3D)` — corrects velocity after integration**
+
+- **Inertia override (first call only):** Reads `state.inverse_inertia`, computes base inertia, scales each axis by the pitch/yaw/roll multipliers. Must be deferred — `inverse_inertia` reports zero in `_ready()`.
+- **Lateral grip (every call):** Directly corrects lateral velocity in car-local space:
+  ```
+  local_vel.x *= (1.0 - grip)   # 0 = full correction, 1 = free slide
+  ```
+  Same lerp feel as CharacterBody3D but applied on a real physics body after all forces are integrated.
+
+### Suspension Formula
 
 ```
-Torque
- 14 |████████████\
-    |             \
-  0 |______________\___
-    0            12.1  22.0   speed (u/s)
-    (falloff_start=0.55 × 22 = 12.1)
+k  = (mass × 9.8 / wheels) / (rest_length × resting_ratio)   [N/m]
+c  = damping_ratio × 2 × √(k × mass_per_wheel)                [N/(m/s)]
+f  = max(0, k × compression + c × compression_velocity)       [N]
 ```
 
-**D — Wheelspin:** When throttle held at `abs(speed) < 4.0 u/s`, grip drops to `wheelspin_grip_mult × normal_grip` — rear breaks loose at standing launch.
-
-**E — Handbrake grip state machine:** `_drift_grip_t` (0→1) blends between `handbrake_grip` and `normal_grip`. Drops 3× faster on press than recovery on release — instant slide entry, gradual catch.
-
 ```
-_drift_grip_t: 1.0 ──── (handbrake press) ──▶ 0.0   (rate × 3)
-               0.0 ──── (handbrake release) ─▶ 1.0   (rate × 1)
-effective grip = lerp(handbrake_grip=0.20, normal_grip=0.85, _drift_grip_t)
+Compression diagram (side view):
+  anchor ─────────────────────── (RayCast3D origin)
+    │  ↕ spring_len = contact_distance − tire_radius
+  contact ────────────────────── (raycast hit point, on ground)
+  [tire radius below = wheel center]
 ```
 
-**F — Speed-sensitive steering:**
+At rest: `compression = rest_length × resting_ratio = 0.075 m`. Spring force equals weight per wheel (3675 N at 1500 kg). Force is applied at the contact point, not the center of mass, so unequal compressions (ramp, cornering, braking) create real pitch/roll torques.
 
-| Speed | Steer rate |
-|---|---|
-| 0–8 u/s | 2.4 rad/s |
-| 14 u/s | 1.65 rad/s |
-| 20 u/s | 0.9 rad/s |
-
-**G — Lateral grip:** `velocity.xz` lerped toward car-forward direction at rate `compute_grip()`.
-
-**H — `move_and_slide()` and run-over detection:** After slide, iterates collisions and calls `get_run_over(speed, dir)` on valid colliders.
-
-**I — Driver glue:** Player position/rotation snapped to car each frame.
+**Anti-roll bar (per axle):**
+```
+arb_force = (comp_left − comp_right) × spring_rate × arb_ratio
+```
+Applied as opposing vertical forces at each wheel's contact point to resist body roll.
 
 ### Visual Systems (`_process`, render rate)
 
-**Body roll:** `_car_body.rotation_degrees.z` lerps toward `steer_input × speed_fraction × body_roll_max_deg`. Cosmetic only — collision capsule does not tilt.
+**Wheel steering:** `WheelMeshFL/FR.rotation.y` lerps toward `_steer_angle` at rate 15.0/s. Cosmetic smoothing — the RayCast3D nodes are set instantly in `_physics_process` for accurate physics.
 
-**Wheel steering:** `WheelFL` and `WheelFR` `rotation_degrees.y` lerps toward `−steer_input × wheel_steer_max_deg` at rate 12.0/s.
+**Body roll and pitch:** Real — the RigidBody3D tilts with the terrain via spring torques. No script-driven rotation needed or applied.
 
 ### Testable Pure Functions
 
-Three `static func` helpers can be called without instantiating the scene:
+Three `static func` helpers callable without instancing the scene:
 
-- `torque_at_speed(spd, max_spd, accel, falloff_start)` — torque curve
-- `effective_steer_speed(spd, low, high, start, end_spd)` — steering rate
-- `compute_grip(drift_grip_t, normal_grip, handbrake_grip)` — effective grip
+- `spring_rate(car_mass, wheels, length, ratio)` — N/m
+- `damping_coeff(spring_k, mass_per_wheel, ratio)` — N/(m/s)
+- `compute_drag(speed, air_density, area, cd)` — N
 
 Tests live in `test/unit/test_car_physics.gd` (GdUnit4) and `test/run_tests.gd` (standalone).
 
@@ -197,15 +210,22 @@ Tests live in `test/unit/test_car_physics.gd` (GdUnit4) and `test/run_tests.gd` 
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path . test/run_tests.tscn
 ```
 
-### Tuning Presets
+### Tuning Guide
 
-| Feel | `normal_grip` | `handbrake_grip` | `steer_speed_low` | `torque_falloff_start` |
+| Feel | `normal_grip` | `handbrake_grip` | `inertia_yaw_mult` | `damping_ratio` |
 |---|---|---|---|---|
-| GTA 3 floaty | 0.70 | 0.05 | 2.8 | 0.35 |
-| **GTA SA (default)** | **0.85** | **0.20** | **2.4** | **0.55** |
-| GTA 5 sticky | 0.93 | 0.35 | 2.0 | 0.70 |
+| GTA 4 heavy | 0.80 | 0.15 | 3.5 | 0.35 |
+| **GTA 5 default** | **0.85** | **0.20** | **2.5** | **0.45** |
+| GTA 5 snappy | 0.92 | 0.30 | 1.8 | 0.55 |
 
-**Forward direction:** Car moves along `-transform.basis.z`. Front visuals are at negative Z, rear at positive Z.
+**Forward direction:** Car moves along `-transform.basis.z`. Front visuals/bumper at negative Z, rear at positive Z. Rear wheels at Z = +1.4 drive the car (RWD).
+
+### Known Issues
+
+| Issue | Notes |
+|---|---|
+| No visual suspension travel | Wheel meshes don't move up/down with compression. Upgrade path: animate wheel mesh Y position using `_compression[i]` values each frame. |
+| Run-over detection removed | RigidBody3D collision iteration differs from CharacterBody3D. Dummies are not currently run over by the car. Upgrade path: connect `body_entered` signal, check velocity magnitude. |
 
 ---
 

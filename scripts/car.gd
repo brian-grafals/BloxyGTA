@@ -1,143 +1,203 @@
-extends CharacterBody3D
+extends RigidBody3D
 
-# ── Engine ──────────────────────────────────────────────────────────────────
-@export var max_speed: float = 22.0
-@export var reverse_speed_ratio: float = 0.45
-@export var acceleration: float = 14.0
-@export var engine_brake_ratio: float = 0.55
-@export var torque_falloff_start: float = 0.55  # fraction of max_speed where torque begins dropping
+# ── Engine ───────────────────────────────────────────────────────────────────
+@export var engine_force: float = 8000.0      # N — peak drive force
+@export var brake_force_mult: float = 1.8     # braking force relative to engine
+@export var max_reverse_ratio: float = 0.45   # reverse cap as fraction of max speed
+
+# ── Suspension ───────────────────────────────────────────────────────────────
+@export var rest_length: float = 0.15         # m — spring natural length
+@export var resting_ratio: float = 0.5        # spring compressed to this fraction at rest
+@export var damping_ratio: float = 0.45       # 0 = no damping, 1 = critical
+@export var tire_radius: float = 0.3          # m
+
+# ── Anti-Roll Bar ────────────────────────────────────────────────────────────
+@export var arb_ratio: float = 0.15           # fraction of spring stiffness for ARB
 
 # ── Steering ─────────────────────────────────────────────────────────────────
-@export var steer_speed_low: float = 2.4         # max steer rate at low speed
-@export var steer_speed_high: float = 0.9        # min steer rate at highway speed
-@export var steer_falloff_start: float = 8.0     # speed (u/s) where reduction begins
-@export var steer_falloff_end: float = 20.0      # speed (u/s) where reduction is maximum
-@export var handbrake_steer_mult: float = 1.6    # steer boost during handbrake
+@export var max_steer_angle: float = 0.5      # rad (~28°)
+@export var steer_rate: float = 3.0           # rad/s input rate
+@export var steer_speed_decay: float = 0.04   # steer reduction per u/s
 
-# ── Grip ──────────────────────────────────────────────────────────────────────
+# ── Grip (same 0–1 range as before) ──────────────────────────────────────────
 @export var normal_grip: float = 0.85
-@export var handbrake_grip: float = 0.20         # 0.20 = SA controllable slide
-@export var grip_recovery_rate: float = 4.0      # grip units/s when releasing handbrake
-@export var wheelspin_grip_mult: float = 0.55    # grip multiplier during launch wheelspin
-@export var wheelspin_speed_threshold: float = 4.0
+@export var handbrake_grip: float = 0.20
 
-# ── Visuals ───────────────────────────────────────────────────────────────────
-@export var body_roll_max_deg: float = 6.0
-@export var body_roll_speed: float = 6.0
-@export var wheel_steer_max_deg: float = 25.0
+# ── Inertia Override ──────────────────────────────────────────────────────────
+@export var inertia_yaw_mult: float = 2.5     # GTA feel — higher = heavier rotation
+@export var inertia_pitch_mult: float = 1.2
+@export var inertia_roll_mult: float = 0.8
 
-var speed: float = 0.0
+# ── Aerodynamics ─────────────────────────────────────────────────────────────
+@export var drag_coeff: float = 0.35
+@export var frontal_area: float = 2.0
+
+# ── State ─────────────────────────────────────────────────────────────────────
+var _speed: float = 0.0
+var _steer_angle: float = 0.0
+var _compression: Array[float] = [0.0, 0.0, 0.0, 0.0]  # FL FR RL RR
+var _inertia_set: bool = false
+var _drifting: bool = false
 var _driver = null
-var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var is_occupied: bool = false
 
-var _drift_grip_t: float = 1.0      # 1.0 = normal grip, 0.0 = handbrake grip
-var _wheelspin_active: bool = false
-var _steer_input: float = 0.0       # written in _physics_process, read in _process
-var _body_roll_current: float = 0.0
+const _FL := 0
+const _FR := 1
+const _RL := 2
+const _RR := 3
+const _AIR_DENSITY := 1.225
 
-@onready var _car_body: Node3D = $CarBody
-@onready var _wheel_fl: MeshInstance3D = $CarBody/WheelFL
-@onready var _wheel_fr: MeshInstance3D = $CarBody/WheelFR
+@onready var _wheels: Array = [$WheelFL, $WheelFR, $WheelRL, $WheelRR]
+@onready var _mesh_fl: MeshInstance3D = $CarBody/WheelMeshFL
+@onready var _mesh_fr: MeshInstance3D = $CarBody/WheelMeshFR
 
 func _ready() -> void:
 	add_to_group("cars")
 
-# ── Pure helper functions (static = callable without instancing the scene) ────
+# ── Static helpers (testable without instancing) ──────────────────────────────
 
-static func torque_at_speed(spd: float, max_spd: float, accel: float, falloff_start: float) -> float:
-	var abs_spd: float = abs(spd)
-	var falloff_spd: float = falloff_start * max_spd
-	if abs_spd <= falloff_spd:
-		return accel
-	var ratio: float = (abs_spd - falloff_spd) / (max_spd - falloff_spd)
-	return accel * (1.0 - clamp(ratio, 0.0, 1.0))
+static func spring_rate(car_mass: float, wheels: int, length: float, ratio: float) -> float:
+	var weight_per_wheel := car_mass * 9.8 / wheels
+	var target_comp := length * ratio
+	return weight_per_wheel / target_comp  # N/m
 
-static func effective_steer_speed(spd: float, low: float, high: float, start: float, end_spd: float) -> float:
-	var t: float = clamp((abs(spd) - start) / (end_spd - start), 0.0, 1.0)
-	return lerp(low, high, t)
+static func damping_coeff(spring_k: float, mass_per_wheel: float, ratio: float) -> float:
+	return ratio * 2.0 * sqrt(spring_k * mass_per_wheel)  # N/(m/s)
 
-static func compute_grip(drift_grip_t: float, norm_grip: float, drift_grip: float) -> float:
-	return lerp(drift_grip, norm_grip, drift_grip_t)
+static func compute_drag(speed: float, air_density: float, area: float, cd: float) -> float:
+	return 0.5 * air_density * speed * speed * area * cd  # N
 
-# ── Physics (60 Hz) ───────────────────────────────────────────────────────────
+# ── Physics (120 Hz) ──────────────────────────────────────────────────────────
 
 func _physics_process(delta: float) -> void:
-	# A — Gravity
-	if not is_on_floor():
-		velocity.y -= _gravity * delta
+	_drifting = is_occupied and Input.is_action_pressed("jump")
 
-	# B — Unoccupied coast
-	if not is_occupied:
-		speed = move_toward(speed, 0.0, acceleration * delta)
-		velocity.x = move_toward(velocity.x, 0.0, 10.0 * delta)
-		velocity.z = move_toward(velocity.z, 0.0, 10.0 * delta)
-		move_and_slide()
-		return
+	var local_vel: Vector3 = global_transform.basis.inverse() * linear_velocity
+	_speed = -local_vel.z  # positive when moving forward
 
-	# C — Throttle / torque curve (power tapers off near max_speed)
-	var torque: float = torque_at_speed(speed, max_speed, acceleration, torque_falloff_start)
-	if Input.is_action_pressed("move_forward"):
-		speed = move_toward(speed, max_speed, torque * delta)
-	elif Input.is_action_pressed("move_backward"):
-		speed = move_toward(speed, -max_speed * reverse_speed_ratio, torque * delta)
-	else:
-		speed = move_toward(speed, 0.0, acceleration * engine_brake_ratio * delta)
+	_process_steering(delta)
+	_process_suspension(delta)
+	if is_occupied:
+		_process_drive()
+	_process_drag()
 
-	# D — Wheelspin: low-speed launch with throttle breaks traction
-	var throttle_held: bool = Input.is_action_pressed("move_forward")
-	var handbrake: bool = Input.is_action_pressed("jump")
-	_wheelspin_active = throttle_held and abs(speed) < wheelspin_speed_threshold and not handbrake
-
-	# E — Handbrake grip state machine: instant slide entry, gradual recovery
-	if handbrake:
-		_drift_grip_t = move_toward(_drift_grip_t, 0.0, grip_recovery_rate * 3.0 * delta)
-	else:
-		_drift_grip_t = move_toward(_drift_grip_t, 1.0, grip_recovery_rate * delta)
-
-	# F — Speed-sensitive steering
-	_steer_input = Input.get_axis("move_left", "move_right")
-	var steer_mult: float = handbrake_steer_mult if handbrake else 1.0
-	var eff_steer: float = effective_steer_speed(speed, steer_speed_low, steer_speed_high,
-												  steer_falloff_start, steer_falloff_end)
-	if abs(speed) > 0.5:
-		rotate_y(-_steer_input * eff_steer * steer_mult * delta * sign(speed))
-
-	# G — Lateral grip application
-	var grip: float = compute_grip(_drift_grip_t, normal_grip, handbrake_grip)
-	if _wheelspin_active:
-		grip *= wheelspin_grip_mult
-	var target_vel: Vector3 = -transform.basis.z * speed
-	velocity.x = lerp(velocity.x, target_vel.x, grip)
-	velocity.z = lerp(velocity.z, target_vel.z, grip)
-
-	# H — Move and run-over detection
-	move_and_slide()
-	for i in get_slide_collision_count():
-		var col = get_slide_collision(i)
-		var collider = col.get_collider()
-		if is_instance_valid(collider) and collider.has_method("get_run_over"):
-			collider.get_run_over(abs(speed), velocity.normalized())
-
-	# I — Keep driver glued to car
 	if _driver:
 		_driver.global_position = global_position
-		_driver.global_rotation = global_rotation
+		_driver.rotation.y = rotation.y
+
+# _integrate_forces runs after forces are integrated each tick.
+# Used for the inertia override (first call) and lateral grip correction (every call).
+func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
+	if not _inertia_set:
+		var inv := state.inverse_inertia
+		if inv.is_finite() and inv != Vector3.ZERO:
+			var base := Vector3(1.0 / inv.x, 1.0 / inv.y, 1.0 / inv.z)
+			inertia = Vector3(
+				base.x * inertia_pitch_mult,
+				base.y * inertia_yaw_mult,
+				base.z * inertia_roll_mult
+			)
+			_inertia_set = true
+
+	# GTA-style lateral grip: correct lateral velocity directly after integration.
+	# Same lerp feel as CharacterBody3D but on a real physics body.
+	var local_vel := state.transform.basis.inverse() * state.linear_velocity
+	var grip := handbrake_grip if _drifting else normal_grip
+	local_vel.x *= (1.0 - grip)
+	state.linear_velocity = state.transform.basis * local_vel
+
+func _process_steering(delta: float) -> void:
+	var input := Input.get_axis("move_left", "move_right") if is_occupied else 0.0
+	var speed_factor: float = 1.0 / (1.0 + abs(_speed) * steer_speed_decay)
+	var target: float = input * max_steer_angle * speed_factor
+	_steer_angle = move_toward(_steer_angle, target, steer_rate * delta)
+	$WheelFL.rotation.y = _steer_angle
+	$WheelFR.rotation.y = _steer_angle
+
+func _process_suspension(delta: float) -> void:
+	var k := spring_rate(mass, 4, rest_length, resting_ratio)
+	var c := damping_coeff(k, mass / 4.0, damping_ratio)
+	var arb_k := k * arb_ratio
+	var compressions: Array[float] = [0.0, 0.0, 0.0, 0.0]
+
+	for i in 4:
+		var w: RayCast3D = _wheels[i]
+		w.force_raycast_update()
+		if not w.is_colliding():
+			_compression[i] = 0.0
+			continue
+
+		var contact := w.get_collision_point()
+		var normal := w.get_collision_normal()
+		var spring_len := contact.distance_to(w.global_position) - tire_radius
+		var comp := maxf(0.0, rest_length - spring_len)
+		compressions[i] = comp
+
+		var comp_vel: float = (comp - _compression[i]) / delta
+		_compression[i] = comp
+
+		# Spring force (Hooke) + damping. Applied at the contact point so the
+		# resulting torque naturally pitches and rolls the body on terrain.
+		var f := maxf(0.0, k * comp + c * comp_vel)
+		apply_force(normal * f, contact - global_position)
+
+	_apply_arb(_FL, _FR, compressions, arb_k)
+	_apply_arb(_RL, _RR, compressions, arb_k)
+
+func _apply_arb(left: int, right: int, compressions: Array[float], arb_k: float) -> void:
+	var wl: RayCast3D = _wheels[left]
+	var wr: RayCast3D = _wheels[right]
+	if not wl.is_colliding() or not wr.is_colliding():
+		return
+	var diff: float = compressions[left] - compressions[right]
+	var f: float = diff * arb_k
+	apply_force(-global_transform.basis.y * f, wl.get_collision_point() - global_position)
+	apply_force(global_transform.basis.y * f, wr.get_collision_point() - global_position)
+
+func _process_drive() -> void:
+	var throttle := Input.get_action_strength("move_forward")
+	var reverse := Input.get_action_strength("move_backward")
+	var fwd := -global_transform.basis.z
+
+	# RWD: engine force at rear wheel contact points
+	for i in [_RL, _RR]:
+		var w: RayCast3D = _wheels[i]
+		if not w.is_colliding():
+			continue
+		var offset := w.get_collision_point() - global_position
+		if throttle > 0.0:
+			apply_force(fwd * (engine_force * throttle * 0.5), offset)
+		elif reverse > 0.0:
+			if _speed > 0.5:  # braking while moving forward
+				apply_force(-linear_velocity.normalized() * (engine_force * brake_force_mult * reverse * 0.5), offset)
+			else:             # reversing
+				apply_force(-fwd * (engine_force * max_reverse_ratio * reverse * 0.5), offset)
+
+	# Front braking
+	if reverse > 0.0 and _speed > 0.5:
+		for i in [_FL, _FR]:
+			var w: RayCast3D = _wheels[i]
+			if not w.is_colliding():
+				continue
+			apply_force(
+				-linear_velocity.normalized() * (engine_force * brake_force_mult * reverse * 0.5),
+				w.get_collision_point() - global_position
+			)
+
+func _process_drag() -> void:
+	if linear_velocity.is_zero_approx():
+		return
+	var f := compute_drag(linear_velocity.length(), _AIR_DENSITY, frontal_area, drag_coeff)
+	apply_central_force(-linear_velocity.normalized() * f)
 
 # ── Visuals (render rate) ─────────────────────────────────────────────────────
 
 func _process(delta: float) -> void:
-	# Body roll — cosmetic tilt of CarBody only; collision capsule is unaffected
-	var lateral_g: float = _steer_input * clamp(abs(speed) / max_speed, 0.0, 1.0)
-	_body_roll_current = lerp(_body_roll_current, lateral_g * body_roll_max_deg, body_roll_speed * delta)
-	_car_body.rotation_degrees.z = _body_roll_current
+	# Smooth visual wheel steering at render rate
+	_mesh_fl.rotation.y = lerp(_mesh_fl.rotation.y, _steer_angle, 15.0 * delta)
+	_mesh_fr.rotation.y = lerp(_mesh_fr.rotation.y, _steer_angle, 15.0 * delta)
 
-	# Front wheel steering animation
-	var target_deg: float = -_steer_input * wheel_steer_max_deg
-	_wheel_fl.rotation_degrees.y = lerp(_wheel_fl.rotation_degrees.y, target_deg, 12.0 * delta)
-	_wheel_fr.rotation_degrees.y = lerp(_wheel_fr.rotation_degrees.y, target_deg, 12.0 * delta)
-
-# ── Car entry / exit API (called by player.gd) ────────────────────────────────
+# ── Public API (called by player.gd) ─────────────────────────────────────────
 
 func enter(player: Node3D) -> void:
 	is_occupied = true
