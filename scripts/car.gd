@@ -18,6 +18,7 @@ extends RigidBody3D
 @export var max_steer_angle: float = 0.5      # rad (~28°)
 @export var steer_rate: float = 3.0           # rad/s input rate
 @export var steer_speed_decay: float = 0.04   # steer reduction per u/s
+@export var steering_stiffness: float = 800.0 # N per (rad·m/s) — cornering force at front axle
 
 # ── Grip (same 0–1 range as before) ──────────────────────────────────────────
 @export var normal_grip: float = 0.85
@@ -79,6 +80,7 @@ func _physics_process(delta: float) -> void:
 	_process_suspension(delta)
 	if is_occupied:
 		_process_drive()
+		_process_steering_force()
 	_process_drag()
 
 	if _driver:
@@ -183,6 +185,13 @@ func _process_drive() -> void:
 				-linear_velocity.normalized() * (engine_force * brake_force_mult * reverse * 0.5),
 				w.get_collision_point() - global_position
 			)
+
+func _process_steering_force() -> void:
+	if abs(_steer_angle) < 0.001:
+		return
+	var lat := global_transform.basis.x
+	var front_offset := -global_transform.basis.z * 1.4  # front axle centre
+	apply_force(lat * (_steer_angle * abs(_speed) * steering_stiffness), front_offset)
 
 func _process_drag() -> void:
 	if linear_velocity.is_zero_approx():
