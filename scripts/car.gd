@@ -106,20 +106,22 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 			)
 			_inertia_set = true
 
-	# Per-axle lateral grip: front grips hard always, rear goes loose on handbrake.
-	# Impulses at axle positions let Godot compute the yaw torque automatically —
-	# front anchors, rear slides, car rotates into the drift.
+	# Per-axle lateral grip — mirrors GTA 5's fTractionBiasFront model:
+	# correct the CoM's sideways sliding (linear only, never the angular/yaw velocity).
+	# Applying different grip magnitudes at axle positions creates the yaw torque
+	# without ever fighting the car's rotation, so steering remains free.
 	var basis := state.transform.basis
 	var lat := basis.x
 	var front_pos := basis * Vector3(0, 0, -1.4)
 	var rear_pos  := basis * Vector3(0, 0,  1.4)
 
-	var front_lat: float = (state.linear_velocity + state.angular_velocity.cross(front_pos)).dot(lat)
-	var rear_lat: float  = (state.linear_velocity + state.angular_velocity.cross(rear_pos)).dot(lat)
+	# CoM lateral slide only — do NOT include angular_velocity.cross(axle),
+	# because that would fight yaw and kill all turning and drifting.
+	var lat_vel: float = state.linear_velocity.dot(lat)
 
 	var rear_grip: float = handbrake_grip if _drifting else normal_grip
-	state.apply_impulse(-lat * front_lat * normal_grip * mass * 0.5, front_pos)
-	state.apply_impulse(-lat * rear_lat  * rear_grip   * mass * 0.5, rear_pos)
+	state.apply_impulse(-lat * lat_vel * normal_grip * mass * 0.5, front_pos)
+	state.apply_impulse(-lat * lat_vel * rear_grip   * mass * 0.5, rear_pos)
 
 func _process_steering(delta: float) -> void:
 	var input := Input.get_axis("move_left", "move_right") if is_occupied else 0.0
