@@ -24,6 +24,7 @@ extends RigidBody3D
 # ── Grip (same 0–1 range as before) ──────────────────────────────────────────
 @export var normal_grip: float = 0.85
 @export var handbrake_grip: float = 0.20
+@export var drift_spring: float = 0.5         # 0–1 — rear pull-back strength during slides
 
 # ── Inertia Override ──────────────────────────────────────────────────────────
 @export var inertia_yaw_mult: float = 2.5     # GTA feel — higher = heavier rotation
@@ -82,6 +83,7 @@ func _physics_process(delta: float) -> void:
 	if is_occupied:
 		_process_drive()
 		_process_steering_force()
+	_process_drift_spring()
 	_process_drag()
 
 	if _driver:
@@ -195,6 +197,16 @@ func _process_steering_force() -> void:
 	var lat := global_transform.basis.x
 	var front_offset := -global_transform.basis.z * 1.4  # front axle centre
 	apply_force(lat * (_steer_angle * abs(_speed) * steering_stiffness), front_offset)
+
+func _process_drift_spring() -> void:
+	# Lateral restoring force at the rear axle — mirrors GTA 5's fTractionSpringDeltaMax.
+	# Computes the rear axle's actual sideways velocity (CoM velocity + spin contribution),
+	# then pushes back against it. Creates a yaw torque that straightens the car during
+	# slides without killing them — you fight it with throttle, like in GTA 5.
+	var rear_offset := global_transform.basis.z * 1.4
+	var vel_at_rear := linear_velocity + angular_velocity.cross(rear_offset)
+	var lateral_vel: float = vel_at_rear.dot(global_transform.basis.x)
+	apply_force(-global_transform.basis.x * lateral_vel * drift_spring * mass, rear_offset)
 
 func _process_drag() -> void:
 	if linear_velocity.is_zero_approx():
