@@ -106,12 +106,20 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 			)
 			_inertia_set = true
 
-	# GTA-style lateral grip: correct lateral velocity directly after integration.
-	# Same lerp feel as CharacterBody3D but on a real physics body.
-	var local_vel := state.transform.basis.inverse() * state.linear_velocity
-	var grip := handbrake_grip if _drifting else normal_grip
-	local_vel.x *= (1.0 - grip)
-	state.linear_velocity = state.transform.basis * local_vel
+	# Per-axle lateral grip: front grips hard always, rear goes loose on handbrake.
+	# Impulses at axle positions let Godot compute the yaw torque automatically —
+	# front anchors, rear slides, car rotates into the drift.
+	var basis := state.transform.basis
+	var lat := basis.x
+	var front_pos := basis * Vector3(0, 0, -1.4)
+	var rear_pos  := basis * Vector3(0, 0,  1.4)
+
+	var front_lat: float = (state.linear_velocity + state.angular_velocity.cross(front_pos)).dot(lat)
+	var rear_lat: float  = (state.linear_velocity + state.angular_velocity.cross(rear_pos)).dot(lat)
+
+	var rear_grip: float = handbrake_grip if _drifting else normal_grip
+	state.apply_impulse(-lat * front_lat * normal_grip * mass * 0.5, front_pos)
+	state.apply_impulse(-lat * rear_lat  * rear_grip   * mass * 0.5, rear_pos)
 
 func _process_steering(delta: float) -> void:
 	var input := Input.get_axis("move_left", "move_right") if is_occupied else 0.0
