@@ -53,6 +53,8 @@ const _AIR_DENSITY := 1.225
 @onready var _wheels: Array = [$WheelFL, $WheelFR, $WheelRL, $WheelRR]
 @onready var _mesh_fl: MeshInstance3D = $CarBody/WheelMeshFL
 @onready var _mesh_fr: MeshInstance3D = $CarBody/WheelMeshFR
+@onready var _mesh_rl: MeshInstance3D = $CarBody/WheelMeshRL
+@onready var _mesh_rr: MeshInstance3D = $CarBody/WheelMeshRR
 
 func _ready() -> void:
 	add_to_group("cars")
@@ -220,6 +222,15 @@ func _process(delta: float) -> void:
 	# Smooth visual wheel steering at render rate
 	_mesh_fl.rotation.y = lerp(_mesh_fl.rotation.y, _steer_angle, 15.0 * delta)
 	_mesh_fr.rotation.y = lerp(_mesh_fr.rotation.y, _steer_angle, 15.0 * delta)
+
+	# Wheel spin — rotate around local X proportional to speed
+	var spin: float = (_speed / tire_radius) * delta
+	_mesh_fl.rotate_x(-spin)
+	_mesh_fr.rotate_x(-spin)
+	# Rear wheels lock when handbrake is held
+	if not _drifting:
+		_mesh_rl.rotate_x(-spin)
+		_mesh_rr.rotate_x(-spin)
 
 # ── Public API (called by player.gd) ─────────────────────────────────────────
 
